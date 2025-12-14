@@ -3,21 +3,6 @@ from django.db.models import SET_NULL
 from datetime import date
 from django.db.models import JSONField
 
-
-class Post(models.Model):
-    title = models.CharField(max_length=200, verbose_name="Tytuł")
-    content = models.TextField(verbose_name="Treść")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Utworzono")
-
-    class Meta:
-        verbose_name = "Post"
-        verbose_name_plural = "Posty"
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return self.title
-
-
 class Litter(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nazwa miotu (np. Litera A)")
     birth_date = models.DateField(verbose_name="Data urodzenia")
@@ -107,7 +92,7 @@ class Photo(models.Model):
         Litter, on_delete=models.CASCADE, null=True, blank=True, related_name='photos'
     )
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, null=True, blank=True, related_name='photos'
+        "blog.Post", on_delete=models.CASCADE, null=True, blank=True, related_name='photos'
     )
 
     class Meta:
