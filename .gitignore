@@ -1,0 +1,33 @@
+# --- Django ---
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+
+# --- Bezpieczeństwo (NAJWAŻNIEJSZE) ---
+.env
+.env.*
+! .env.example
+
+# --- Python ---
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# --- PyCharm (IDE) ---
+.idea/
+.vscode/
+
+# --- Windows ---
+Thumbs.db
+Desktop.ini
+
+# --- Wirtualne środowisko (zależnie jak je nazwałeś) ---
+venv/
+env/
+.venv/
