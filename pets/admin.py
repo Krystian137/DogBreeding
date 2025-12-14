@@ -14,7 +14,10 @@ class DogAdmin(admin.ModelAdmin):
 
 @admin.register(Litter)
 class LitterAdmin(admin.ModelAdmin):
-    list_display = ('name', 'birth_date', 'mother', 'father')
+    list_display = ('name', 'birth_date', 'mother', 'father', 'boys_count', 'girls_count', 'total_puppies_display')
+    def total_puppies_display(self, obj):
+        return obj.total_puppies
+    total_puppies_display.short_description = "Łączna liczba szczeniąt"
 
 
 @admin.register(Photo)

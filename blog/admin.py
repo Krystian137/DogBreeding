@@ -13,6 +13,7 @@ class PhotoInline(admin.TabularInline):
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_at')
+    prepopulated_fields = {'slug': ('title',)}
     search_fields = ('title', 'content')
     ordering = ('-created_at',)
     inlines = [PhotoInline]

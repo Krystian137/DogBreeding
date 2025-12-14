@@ -8,6 +8,35 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello World!</h1>
+    {% block content %}
+    <h1>Nasze Posty</h1>
+
+    {% for post in posts %}
+        <article>
+            <h2><a href="{% url 'blog:post-detail' slug=post.slug %}">{{ post.title }}</a></h2>
+            <p>{{ post.content|truncatewords:30 }}</p> <small>Dodano: {{ post.created_at|date:"d M Y" }}</small>
+
+            {% if post.photos.all %}
+                <img src="{{ post.photos.first.image.url }}" alt="Zdjęcie psa">
+            {% endif %}
+        </article>
+        <hr>
+    {% endfor %}
+
+    <div class="pagination">
+        {% if is_paginated %}
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
+            {% endif %}
+
+            <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Następna</a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+{% endblock %}
 </body>
 </html>

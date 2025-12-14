@@ -16,13 +16,19 @@ class Litter(models.Model):
         related_name='father_litters', verbose_name="Ojciec",
         limit_choices_to={'gender': 'M'}
     )
+    boys_count = models.PositiveIntegerField(verbose_name="Liczba samców", default=0)
+    girls_count = models.PositiveIntegerField(verbose_name="Liczba samic", default=0)
 
     class Meta:
         verbose_name = "Miot"
         verbose_name_plural = "Mioty"
 
+    @property
+    def total_puppies(self):
+        return self.boys_count + self.girls_count
+
     def __str__(self):
-        return f"{self.name} ({self.birth_date.year})"
+        return f"{self.name} ({self.birth_date.year}) ({self.total_puppies} szczeniąt)"
 
 
 class Dog(models.Model):
@@ -33,8 +39,8 @@ class Dog(models.Model):
         STAYED = 'stayed', 'Został w hodowli'
 
     class Gender(models.TextChoices):
-        MALE = 'M', 'Pies'
-        FEMALE = 'F', 'Suka'
+        MALE = 'M', 'Samiec'
+        FEMALE = 'F', 'Samica'
 
     name = models.CharField(max_length=100, verbose_name="Imię domowe/rodowodowe")
     litter = models.ForeignKey(
@@ -48,7 +54,7 @@ class Dog(models.Model):
     description = models.TextField(verbose_name="Opis", blank=True)
     vaccinations = models.TextField(null=True, blank=True, verbose_name="Szczepienia")
     achievements = models.TextField(null=True, blank=True, verbose_name="Osiągnięcia")
-
+    main_image = models.ImageField(upload_to='dog_avatar/', null=True, blank=True, verbose_name="Główne zdjęcie")
     weight = models.FloatField(verbose_name="Waga (kg)", help_text="Wpisz wagę w kilogramach")
     height = models.FloatField(verbose_name="Wzrost (cm)", help_text="Wpisz wzrost w cm")
     color = models.CharField(max_length=50, verbose_name="Umaszczenie")

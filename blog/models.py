@@ -4,6 +4,7 @@ from django.db import models
 
 class Post(models.Model):
     title = models.CharField(max_length=200, verbose_name="Tytuł")
+    slug = models.SlugField(max_length=200, unique=True, verbose_name="Adres URL (Slug)")
     content = models.TextField(verbose_name="Treść")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Utworzono")
 
