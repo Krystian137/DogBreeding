@@ -7,6 +7,7 @@ class Post(models.Model):
     slug = models.SlugField(max_length=200, unique=True, verbose_name="Adres URL (Slug)")
     content = models.TextField(verbose_name="Treść")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Utworzono")
+    main_image = models.ImageField(upload_to='post_images/', null=True, blank=True, verbose_name="Główne zdjęcie")
 
     class Meta:
         verbose_name = "Post"

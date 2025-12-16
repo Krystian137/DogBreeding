@@ -3,6 +3,17 @@ from django.utils.html import format_html
 from pets.models import Dog, Litter, Photo
 
 # Register your models here.
+class PhotoInline(admin.TabularInline):
+    model = Photo
+    extra = 1
+    fields = ('image_preview', 'image')
+    readonly_fields = ('image_preview',)
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="width: 100px; height: 100px; object-fit: cover;"/>', obj.image.url)
+        return "Bralo zdjęcia"
+    image_preview.short_description = "Podgląd zdjęcia"
 
 @admin.register(Dog)
 class DogAdmin(admin.ModelAdmin):
@@ -10,6 +21,13 @@ class DogAdmin(admin.ModelAdmin):
     list_filter = ('status', 'gender', 'litter')
     search_fields = ('name',)
     readonly_fields = ('age',)
+    inlines = [PhotoInline]
+
+    def avatar_preview(self, obj):
+        if obj.main_image:
+            return format_html('<img src="{}" style="width: 100px; height: 100px; object-fit: cover;"/>', obj.main_image.url)
+        return "-"
+    avatar_preview.short_description = "Awatar"
 
 
 @admin.register(Litter)
