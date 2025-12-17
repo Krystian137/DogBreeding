@@ -1,49 +1,62 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from pets.models import Dog, Litter, Photo
+from .models import Dog, Litter, DogPhoto, LitterPhoto
 
-# Register your models here.
-class PhotoInline(admin.TabularInline):
-    model = Photo
+
+class DogPhotoInline(admin.TabularInline):
+    model = DogPhoto
     extra = 1
-    fields = ('image_preview', 'image')
+    fields = ('image_preview', 'image', 'is_main', 'order')
     readonly_fields = ('image_preview',)
 
     def image_preview(self, obj):
         if obj.image:
-            return format_html('<img src="{}" style="width: 100px; height: 100px; object-fit: cover;"/>', obj.image.url)
-        return "Bralo zdjęcia"
-    image_preview.short_description = "Podgląd zdjęcia"
+            return format_html(
+                '<img src="{}" style="width:100px;height:100px;object-fit:cover;">',
+                obj.image.url
+            )
+        return "—"
+    image_preview.short_description = "Podgląd"
+
+
+class LitterPhotoInline(admin.TabularInline):
+    model = LitterPhoto
+    extra = 1
+    fields = ('image_preview', 'image', 'order')
+    readonly_fields = ('image_preview',)
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="width:100px;height:100px;object-fit:cover;">',
+                obj.image.url
+            )
+        return "—"
+    image_preview.short_description = "Podgląd"
+
 
 @admin.register(Dog)
 class DogAdmin(admin.ModelAdmin):
-    list_display = ('name', 'litter', 'gender', 'status', 'age')
+    list_display = ('name', 'litter', 'gender', 'status', 'age', 'main_photo_preview')
+    prepopulated_fields = {'slug': ('name',)}
     list_filter = ('status', 'gender', 'litter')
     search_fields = ('name',)
     readonly_fields = ('age',)
-    inlines = [PhotoInline]
+    inlines = [DogPhotoInline]
 
-    def avatar_preview(self, obj):
-        if obj.main_image:
-            return format_html('<img src="{}" style="width: 100px; height: 100px; object-fit: cover;"/>', obj.main_image.url)
-        return "-"
-    avatar_preview.short_description = "Awatar"
+    def main_photo_preview(self, obj):
+        if obj.main_photo:
+            return format_html(
+                '<img src="{}" style="width:60px;height:60px;object-fit:cover;">',
+                obj.main_photo.image.url
+            )
+        return "—"
+    main_photo_preview.short_description = "Główne zdjęcie"
 
 
 @admin.register(Litter)
 class LitterAdmin(admin.ModelAdmin):
-    list_display = ('name', 'birth_date', 'mother', 'father', 'boys_count', 'girls_count', 'total_puppies_display')
-    def total_puppies_display(self, obj):
-        return obj.total_puppies
-    total_puppies_display.short_description = "Łączna liczba szczeniąt"
-
-
-@admin.register(Photo)
-class PhotoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'dog', 'litter', 'post', 'upload_date')
-
-    def image_preview(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" style="width: 50px; height: 50px; object-fit: cover;"/>', obj.image.url)
-
-    image_preview.short_description = "Podgląd"
+    list_display = ('name', 'birth_date', 'mother', 'father', 'total_puppies')
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ('name', 'mother__name', 'father__name')
+    inlines = [LitterPhotoInline]

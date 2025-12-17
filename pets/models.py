@@ -1,11 +1,11 @@
 from django.db import models
 from django.db.models import SET_NULL
 from datetime import date
-from django.db.models import JSONField
 
 class Litter(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nazwa miotu (np. Litera A)")
     birth_date = models.DateField(verbose_name="Data urodzenia")
+    description = models.TextField(verbose_name="Opis", blank=True)
     mother = models.ForeignKey(
         "Dog", on_delete=SET_NULL, null=True, blank=True,
         related_name='mother_litters', verbose_name="Matka",
@@ -18,7 +18,7 @@ class Litter(models.Model):
     )
     boys_count = models.PositiveIntegerField(verbose_name="Liczba samców", default=0)
     girls_count = models.PositiveIntegerField(verbose_name="Liczba samic", default=0)
-
+    slug = models.SlugField(max_length=200, unique=True, verbose_name="Adres URL (Slug)")
     class Meta:
         verbose_name = "Miot"
         verbose_name_plural = "Mioty"
@@ -54,13 +54,13 @@ class Dog(models.Model):
     description = models.TextField(verbose_name="Opis", blank=True)
     vaccinations = models.TextField(null=True, blank=True, verbose_name="Szczepienia")
     achievements = models.TextField(null=True, blank=True, verbose_name="Osiągnięcia")
-    main_image = models.ImageField(upload_to='dog_avatar/', null=True, blank=True, verbose_name="Główne zdjęcie")
     weight = models.FloatField(verbose_name="Waga (kg)", help_text="Wpisz wagę w kilogramach")
     height = models.FloatField(verbose_name="Wzrost (cm)", help_text="Wpisz wzrost w cm")
     color = models.CharField(max_length=50, verbose_name="Umaszczenie")
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.AVAILABLE, verbose_name="Status"
     )
+    slug = models.SlugField(max_length=200, unique=True, verbose_name="Adres URL (Slug)")
 
     class Meta:
         verbose_name = "Pies"
@@ -79,31 +79,51 @@ class Dog(models.Model):
             return f"{months} msc"
         return f"{years} lat"
 
-    def save(self, *args, **kwargs):
-        if not self.birth_date and self.litter:
-            self.birth_date = self.litter.birth_date
-        super().save(*args, **kwargs)
+    @property
+    def main_photo(self):
+        return self.photos.filter(is_main=True).first()
 
     def __str__(self):
         return self.name
 
 
-class Photo(models.Model):
-    image = models.ImageField(upload_to='dog_photos/', verbose_name="Zdjęcie")
+class DogPhoto(models.Model):
+    dog = models.ForeignKey(Dog, on_delete=models.CASCADE, related_name='photos')
+    image = models.ImageField(upload_to='dogs/')
+    is_main = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=0)
     upload_date = models.DateTimeField(auto_now_add=True)
-    dog = models.ForeignKey(
-        Dog, on_delete=models.CASCADE, null=True, blank=True, related_name='photos'
-    )
-    litter = models.ForeignKey(
-        Litter, on_delete=models.CASCADE, null=True, blank=True, related_name='photos'
-    )
-    post = models.ForeignKey(
-        "blog.Post", on_delete=models.CASCADE, null=True, blank=True, related_name='photos'
-    )
 
     class Meta:
         verbose_name = "Zdjęcie"
         verbose_name_plural = "Zdjęcia"
 
+    def save(self, *args, **kwargs):
+        if self.is_main:
+            DogPhoto.objects.filter(
+                dog=self.dog,
+                is_main=True
+            ).exclude(pk=self.pk).update(is_main=False)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['order', 'upload_date']
+
     def __str__(self):
         return f"Zdjęcie {self.id} ({self.upload_date.strftime('%Y-%m-%d')})"
+
+
+class LitterPhoto(models.Model):
+    litter = models.ForeignKey(Litter, on_delete=models.CASCADE, related_name='photos')
+    image = models.ImageField(upload_to='litters/')
+    order = models.PositiveIntegerField(default=0)
+    upload_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Zdjęcie"
+        verbose_name_plural = "Zdjęcia"
+        ordering = ['order', 'upload_date']
+
+    def __str__(self):
+        return f"Zdjęcie {self.id} ({self.upload_date.strftime('%Y-%m-%d')})"
+

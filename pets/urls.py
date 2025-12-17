@@ -4,7 +4,8 @@ from . import views
 app_name = 'zwierzaki'
 
 urlpatterns = [
-    path('lista/', views.lista_psow.as_view(), name='lista'),
-
-    path('<slug:slug>/', views.profil_psa.as_view(), name='profil_psa'),
+    path('lista/', views.DogList.as_view(), name='DogList'),
+    path('<slug:slug>/', views.DogProfile.as_view(), name='DogProfile'),
+    path('mioty/', views.LitterList.as_view(), name='LitterList'),
+    path('mioty/<slug:slug>/', views.LitterDetails.as_view(), name='LitterDetails'),
 ]
