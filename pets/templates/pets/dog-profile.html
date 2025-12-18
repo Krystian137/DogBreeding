@@ -1,23 +1,29 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>{{ dog.name }}</title>
 </head>
 <body>
-    {% block content %}
-    <article>
-        <h2><a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}">{{ dog.name }}</a></h2>
 
-        {% if dog.photos.all %}
-            <img src="{{ dog.photos.first.image.url }}" alt="Zdjęcie psa">
-        {% endif %}
-    </article>
-    <hr>
+<article>
+    <h1>{{ dog.name }}</h1>
 
-{% endblock %}
+    <p>Status: {{ dog.get_status_display }}</p>
+    <p>Płeć: {{ dog.get_gender_display }}</p>
+    <p>Wiek: {{ dog.age }}</p>
+    <p>Kolor: {{ dog.color }}</p>
+    <p>Waga: {{ dog.weight }} kg</p>
+    <p>Wzrost: {{ dog.height }} cm</p>
+
+    {% if dog.main_photo %}
+        <img src="{{ dog.main_photo.image.url }}" style="max-width:300px;">
+    {% elif dog.photos.first %}
+        <img src="{{ dog.photos.first.image.url }}" style="max-width:300px;">
+    {% endif %}
+
+    <p>{{ dog.description }}</p>
+</article>
+
 </body>
 </html>

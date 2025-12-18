@@ -12,7 +12,7 @@ class DogList(ListView):
 class DogProfile(DetailView):
     model = Dog
     template_name = 'pets/dog-profile.html'
-    context_object_name = 'dog-profile'
+    context_object_name = 'dog'
 
 
 class LitterList(ListView):
