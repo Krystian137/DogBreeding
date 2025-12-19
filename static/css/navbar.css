@@ -1,0 +1,138 @@
+/* ================= NARBAR START (LOGIKA JS + CIEMNY MOTYW) ================= */
+
+/* --- 1. Ustawienia Bazowe --- */
+#mainNav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Delikatna linia na start */
+    background-color: transparent; /* Przezroczysty na górze */
+    font-family: "Open Sans", sans-serif;
+}
+
+/* Linki i Brand (Zawsze jasne na ciemnym tle) */
+#mainNav .navbar-brand {
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--col-heading); /* Biel */
+}
+
+#mainNav .navbar-nav > li.nav-item > a.nav-link {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.0625em;
+    text-transform: uppercase;
+    color: var(--col-text); /* Jasnoszary */
+    padding: 1rem;
+}
+
+/* Hover na linki - Złoty akcent */
+#mainNav .navbar-nav > li.nav-item > a.nav-link:focus,
+#mainNav .navbar-nav > li.nav-item > a.nav-link:hover {
+    color: var(--col-accent) !important; /* Złoty */
+}
+
+/* Przycisk hamburgera na telefonie */
+#mainNav .navbar-toggler {
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.75rem;
+    text-transform: uppercase;
+    color: var(--col-heading);
+    border-color: var(--col-accent);
+    background-color: var(--col-dark-green);
+}
+
+/* --- 2. LOGIKA ANIMACJI (DESKTOP > 992px) --- */
+/* To jest ta część, która współpracuje z Twoim JavaScriptem */
+@media (min-width: 992px) {
+    #mainNav {
+        transition: background-color 0.2s; /* Płynna zmiana tła */
+        /* Kluczowe dla JS: */
+        transform: translate3d(0, 0, 0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        background: transparent; /* Na samej górze brak tła */
+        border-bottom: 1px solid transparent;
+    }
+
+    /* Stan hover/focus na górze strony */
+    #mainNav .navbar-brand:focus,
+    #mainNav .navbar-brand:hover {
+        color: var(--col-accent);
+    }
+    #mainNav .navbar-nav > li.nav-item > a.nav-link:focus,
+    #mainNav .navbar-nav > li.nav-item > a.nav-link:hover {
+        color: var(--col-accent);
+    }
+
+    /* --- Stan: PRZYKLEJONY (Fixed) --- */
+    /* JS dodaje tę klasę, gdy zjedziesz w dół */
+    #mainNav.is-fixed {
+        position: fixed;
+        /* Chowamy go nad ekranem (-85px), żeby potem wjechał animacją */
+        top: -85px;
+        transition: transform 0.2s;
+        border-bottom: 1px solid var(--col-accent); /* Złota linia na dole */
+
+        /* ZMIANA KOLORU NA CIEMNY MOTYW */
+        background-color: rgba(15, 20, 16, 0.95); /* --col-dark-green z przezroczystością */
+    }
+
+    /* Kolory w stanie przyklejonym */
+    #mainNav.is-fixed .navbar-brand {
+        color: var(--col-heading); /* Nadal biały */
+    }
+    #mainNav.is-fixed .navbar-brand:focus,
+    #mainNav.is-fixed .navbar-brand:hover {
+        color: var(--col-accent);
+    }
+    #mainNav.is-fixed .navbar-nav > li.nav-item > a {
+        color: var(--col-text);
+    }
+    #mainNav.is-fixed .navbar-nav > li.nav-item > a:focus,
+    #mainNav.is-fixed .navbar-nav > li.nav-item > a:hover {
+        color: var(--col-accent);
+    }
+
+    /* --- Stan: WIDOCZNY (Visible) --- */
+    /* JS dodaje tę klasę, gdy scrollujesz do góry */
+    #mainNav.is-visible {
+        /* To sprawia, że navbar "wyjeżdża" z góry */
+        transform: translate3d(0, 100%, 0);
+    }
+}
+
+/* --- 3. WERSJA MOBILNA (< 991px) --- */
+@media (max-width: 991px) {
+    #mainNav {
+        transition: top 0.3s;
+        background-color: var(--col-dark-green); /* Zawsze ciemne tło na telefonie */
+        border-bottom: 1px solid var(--col-border);
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    #mainNav.is-visible {
+        top: 0;
+    }
+
+    #mainNav.is-fixed {
+        position: fixed;
+        top: 0;
+    }
+
+    .navbar-toggler {
+        display: block;
+    }
+
+    /* Poprawka dla rozwijanego menu na telefonie */
+    .navbar-collapse {
+        background-color: var(--col-dark-green);
+        padding: 10px;
+        border-radius: 0 0 10px 10px;
+    }
+}
+/* ================= NAVBAR END ================= */

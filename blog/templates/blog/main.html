@@ -1,31 +1,46 @@
 {% extends "base.html" %}
-    {% block content %}
-    <h1>Nasze Posty</h1>
+{% block content %}
+<h1 class="mb-4">Aktualności z hodowli</h1>
 
+<div class="row g-4">
     {% for post in posts %}
-        <article>
-            <h2><a href="{% url 'blog:post-detail' slug=post.slug %}">{{ post.title }}</a></h2>
-            <p>{{ post.content|truncatewords:30 }}</p> <small>Dodano: {{ post.created_at|date:"d M Y" }}</small>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <article class="post-card h-100">
+                {% if post.photos.first %}
+                    <img src="{{ post.photos.first.image.url }}"
+                         class="post-card-img"
+                         alt="{{ post.title }}">
+                {% endif %}
 
-            {% if post.photos.all %}
-                <img src="{{ post.photos.first.image.url }}" alt="Zdjęcie psa">
-            {% endif %}
-        </article>
-        <hr>
+                <div class="post-card-body">
+                    <small class="post-date">
+                        {{ post.created_at|date:"d M Y" }}
+                    </small>
+
+                    <h2 class="post-title">
+                        <a href="{% url 'blog:post-detail' slug=post.slug %}">
+                            {{ post.title }}
+                        </a>
+                    </h2>
+
+                    <p class="post-excerpt">
+                        {{ post.content|truncatewords:18 }}
+                    </p>
+                </div>
+            </article>
+        </div>
     {% endfor %}
+</div>
 
-    <div class="pagination">
-        {% if is_paginated %}
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
-            {% endif %}
-
-            <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
-
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Następna</a>
-            {% endif %}
-        {% endif %}
-    </div>
-
+{% if is_paginated %}
+<div class="pagination mt-5">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">← Poprzednia</a>
+    {% endif %}
+    <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Następna →</a>
+    {% endif %}
+</div>
+{% endif %}
 {% endblock %}
