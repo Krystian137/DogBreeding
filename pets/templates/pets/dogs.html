@@ -1,31 +1,81 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Nasze Pieski</h1>
+{% extends "base.html" %}
+{% load static %}
 
+{% block title %}Nasze Psy - Costa Rizada{% endblock %}
+
+{% block header_content %}
+    <h1>Nasze Psy</h1>
+    <span class="subheading">Poznaj naszych pięknych podopiecznych</span>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dogs.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dogs-container">
     {% for dog in dogs %}
-        <article>
-            <h2>
-                <a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}">{{ dog.name }}</a>
-            </h2>
+        <article class="dog-card">
+            <!-- Zdjęcie psa -->
+            <div class="dog-image">
+                {% if dog.main_image %}
+                    <img src="{{ dog.main_image.url }}" 
+                         alt="{{ dog.name }}"
+                         loading="lazy">
+                {% elif dog.photos.exists %}
+                    <img src="{{ dog.photos.first.image.url }}" 
+                         alt="{{ dog.name }}"
+                         loading="lazy">
+                {% else %}
+                    <div class="dog-image-placeholder">
+                        <span>🐕</span>
+                    </div>
+                {% endif %}
 
-            <p>{{ dog.description|truncatewords:30 }}</p>
+                <!-- Badge z płcią -->
+                <div class="dog-badge">
+                    {% if dog.gender == 'M' %}
+                        <span class="badge-male">♂ Pies</span>
+                    {% elif dog.gender == 'F' %}
+                        <span class="badge-female">♀ Suczka</span>
+                    {% endif %}
+                </div>
+            </div>
 
-            {% if dog.main_image %}
-                <img src="{{ dog.main_image.url }}" alt="{{ dog.name }}" style="max-width: 200px;">
-            {% elif dog.photos.exists %}
-                <img src="{{ dog.photos.first.image.url }}" alt="{{ dog.name }}" style="max-width: 200px;">
-            {% endif %}
+            <!-- Informacje -->
+            <div class="dog-info">
+                <h3 class="dog-name">
+                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}">
+                        {{ dog.name }}
+                    </a>
+                </h3>
+
+                {% if dog.age %}
+                <p class="dog-age">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                    </svg>
+                    Wiek: {{ dog.age }}
+                </p>
+                {% endif %}
+
+                <p class="dog-description">
+                    {{ dog.description|truncatewords:25 }}
+                </p>
+
+                <a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}" class="dog-link">
+                    Zobacz profil
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                    </svg>
+                </a>
+            </div>
         </article>
-        <hr>
+    {% empty %}
+        <div class="no-dogs-message">
+            <h3>Brak psów do wyświetlenia</h3>
+            <p>Wkrótce pojawią się nowi podopieczni!</p>
+        </div>
     {% endfor %}
-
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,29 +1,192 @@
-<!doctype html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ dog.name }}</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-<article>
+{% block title %}{{ dog.name }} - Costa Rizada{% endblock %}
+
+{% block header_content %}
     <h1>{{ dog.name }}</h1>
+    <span class="subheading">
+        {{ dog.get_gender_display }} • {{ dog.age }}
+    </span>
+{% endblock %}
 
-    <p>Status: {{ dog.get_status_display }}</p>
-    <p>Płeć: {{ dog.get_gender_display }}</p>
-    <p>Wiek: {{ dog.age }}</p>
-    <p>Kolor: {{ dog.color }}</p>
-    <p>Waga: {{ dog.weight }} kg</p>
-    <p>Wzrost: {{ dog.height }} cm</p>
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dogs.css' %}">
+{% endblock %}
 
-    {% if dog.main_photo %}
-        <img src="{{ dog.main_photo.image.url }}" style="max-width:300px;">
-    {% elif dog.photos.first %}
-        <img src="{{ dog.photos.first.image.url }}" style="max-width:300px;">
-    {% endif %}
+{% block content %}
+<div class="dog-profile-container">
+    <div class="dog-profile-card">
+        <!-- Główne zdjęcie -->
+        <div class="dog-profile-hero">
+            {% if dog.main_photo %}
+                <img src="{{ dog.main_photo.image.url }}" 
+                     alt="{{ dog.name }}"
+                     loading="lazy">
+            {% elif dog.photos.first %}
+                <img src="{{ dog.photos.first.image.url }}" 
+                     alt="{{ dog.name }}"
+                     loading="lazy">
+            {% else %}
+                <div class="dog-hero-placeholder">
+                    <span>{% if dog.gender == 'M' %}♂{% else %}♀{% endif %}</span>
+                </div>
+            {% endif %}
 
-    <p>{{ dog.description }}</p>
-</article>
+            <!-- Badge statusu -->
+            <div class="dog-status-badge">
+                {% if dog.status == 'available' %}
+                    <span class="badge-available">Dostępny</span>
+                {% elif dog.status == 'reserved' %}
+                    <span class="badge-reserved">Zarezerwowany</span>
+                {% elif dog.status == 'sold' %}
+                    <span class="badge-sold">Sprzedany</span>
+                {% elif dog.status == 'stayed' %}
+                    <span class="badge-stayed">W hodowli</span>
+                {% endif %}
+            </div>
 
-</body>
-</html>
+            <!-- Badge płci -->
+            <div class="dog-gender-badge-hero">
+                {% if dog.gender == 'M' %}
+                    <span class="badge-male-hero">♂ {{ dog.get_gender_display }}</span>
+                {% else %}
+                    <span class="badge-female-hero">♀ {{ dog.get_gender_display }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Treść profilu -->
+        <div class="dog-profile-content">
+            <!-- Nagłówek -->
+            <div class="profile-header-dog">
+                <h1 class="profile-name-dog">{{ dog.name }}</h1>
+            </div>
+
+            <!-- Informacje podstawowe - elegancka tabela -->
+            <div class="dog-info-section">
+                <h3 class="section-title-dog">Informacje podstawowe</h3>
+
+                <div class="info-table">
+                    <div class="info-row">
+                        <span class="info-label">Płeć</span>
+                        <span class="info-value">{{ dog.get_gender_display }}</span>
+                    </div>
+
+                    {% if dog.age %}
+                    <div class="info-row">
+                        <span class="info-label">Wiek</span>
+                        <span class="info-value">{{ dog.age }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if dog.color %}
+                    <div class="info-row">
+                        <span class="info-label">Umaszczenie</span>
+                        <span class="info-value">{{ dog.color }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if dog.weight %}
+                    <div class="info-row">
+                        <span class="info-label">Waga</span>
+                        <span class="info-value">{{ dog.weight }} kg</span>
+                    </div>
+                    {% endif %}
+
+                    {% if dog.height %}
+                    <div class="info-row">
+                        <span class="info-label">Wzrost</span>
+                        <span class="info-value">{{ dog.height }} cm</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="info-row">
+                        <span class="info-label">Status</span>
+                        <span class="info-value status-inline">
+                            {% if dog.status == 'available' %}
+                                <span class="status-dot status-dot-available"></span> Dostępny
+                            {% elif dog.status == 'reserved' %}
+                                <span class="status-dot status-dot-reserved"></span> Zarezerwowany
+                            {% elif dog.status == 'sold' %}
+                                <span class="status-dot status-dot-sold"></span> Sprzedany
+                            {% elif dog.status == 'stayed' %}
+                                <span class="status-dot status-dot-stayed"></span> W hodowli
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    {% if dog.litter %}
+                    <div class="info-row">
+                        <span class="info-label">Miot</span>
+                        <span class="info-value">
+                            <a href="{% url 'zwierzaki:LitterProfile' slug=dog.litter.slug %}" class="info-link">
+                                {{ dog.litter.name }}
+                            </a>
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Opis -->
+            {% if dog.description %}
+            <div class="dog-description-section">
+                <h3 class="section-title-dog">O {{ dog.name }}</h3>
+                <div class="description-content-dog">
+                    {{ dog.description|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Szczepienia -->
+            {% if dog.vaccinations %}
+            <div class="dog-vaccinations-section">
+                <h3 class="section-title-dog">Szczepienia</h3>
+                <div class="vaccinations-content">
+                    {{ dog.vaccinations|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Osiągnięcia -->
+            {% if dog.achievements %}
+            <div class="dog-achievements-section">
+                <h3 class="section-title-dog">Osiągnięcia</h3>
+                <div class="achievements-content">
+                    {{ dog.achievements|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Galeria zdjęć -->
+            {% if dog.photos.all|length > 1 %}
+            <div class="dog-gallery-section">
+                <h3 class="section-title-dog">Galeria zdjęć</h3>
+                <div class="gallery-grid-dog">
+                    {% for photo in dog.photos.all %}
+                        {% if photo != dog.main_photo %}
+                        <div class="gallery-item-dog">
+                            <img src="{{ photo.image.url }}"
+                                 alt="{{ dog.name }}"
+                                 loading="lazy">
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Akcje -->
+            <div class="profile-actions-dog">
+                <a href="{% url 'zwierzaki:DogList' %}" class="btn-back-dog">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                    </svg>
+                    Powrót do listy psów
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,745 @@
+/* =========================================
+   DOGS - Lista psów
+   ========================================= */
+
+/* Kontener */
+.dogs-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 40px 30px;
+    margin-bottom: 4rem;
+}
+
+/* Karta psa */
+.dog-card {
+    background: rgba(40, 35, 30, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid var(--col-accent);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.5),
+        0 5px 15px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+/* Opóźnienie animacji */
+.dog-card:nth-child(1) { animation-delay: 0.1s; }
+.dog-card:nth-child(2) { animation-delay: 0.2s; }
+.dog-card:nth-child(3) { animation-delay: 0.3s; }
+.dog-card:nth-child(4) { animation-delay: 0.4s; }
+.dog-card:nth-child(5) { animation-delay: 0.5s; }
+.dog-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Hover */
+.dog-card:hover {
+    transform: translateY(-10px);
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.6),
+        0 10px 30px rgba(197, 160, 101, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+    border-color: var(--col-accent-light);
+}
+
+/* Złota linia na górze */
+.dog-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--col-accent) 20%,
+        var(--col-accent-light) 50%,
+        var(--col-accent) 80%,
+        transparent 100%
+    );
+    z-index: 10;
+}
+
+/* Zdjęcie psa */
+.dog-image {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+}
+
+.dog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.dog-card:hover .dog-image img {
+    transform: scale(1.1);
+}
+
+/* Placeholder gdy brak zdjęcia */
+.dog-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2C3E30 0%, #1A241E 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--col-accent);
+    font-size: 5rem;
+}
+
+/* Badge płci */
+.dog-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+}
+
+.badge-male,
+.badge-female {
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.badge-male {
+    background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);
+    color: #fff;
+}
+
+.badge-female {
+    background: linear-gradient(135deg, #E94B8A 0%, #F76BA3 100%);
+    color: #fff;
+}
+
+/* Informacje o psie */
+.dog-info {
+    padding: 2rem;
+}
+
+/* Imię psa */
+.dog-name {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.2;
+}
+
+.dog-name a {
+    color: var(--col-heading); /* Jasny */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.dog-name a:hover {
+    color: var(--col-accent-light);
+}
+
+/* Wiek */
+.dog-age {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--col-text-muted); /* Jasny szary */
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.dog-age svg {
+    color: var(--col-accent);
+}
+
+/* Opis */
+.dog-description {
+    color: var(--col-text-muted); /* Jasny szary */
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+/* Link do profilu */
+.dog-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--col-accent) 0%, var(--col-accent-light) 100%);
+    color: #000;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3);
+}
+
+.dog-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4);
+    color: #000;
+}
+
+.dog-link svg {
+    transition: transform 0.3s ease;
+}
+
+.dog-link:hover svg {
+    transform: translateX(5px);
+}
+
+/* Komunikat gdy brak psów */
+.no-dogs-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(40, 35, 30, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px dashed var(--col-accent);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.no-dogs-message h3 {
+    color: var(--col-accent);
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.no-dogs-message p {
+    color: var(--col-text-muted);
+    font-size: 1.1rem;
+}
+
+/* Animacja wjazdu */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   DOG PROFILE - Profil psa (profesjonalny)
+   ========================================= */
+
+/* Kontener profilu */
+.dog-profile-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.dog-profile-card {
+    background: rgba(40, 35, 30, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid var(--col-accent);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.5),
+        0 8px 20px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    position: relative;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Hero image */
+.dog-profile-hero {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+}
+
+.dog-profile-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dog-hero-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2C3E30 0%, #1A241E 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8rem;
+    color: var(--col-accent);
+}
+
+/* Badge statusu - prawy górny róg */
+.dog-status-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.badge-available,
+.badge-reserved,
+.badge-sold,
+.badge-stayed {
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.badge-available {
+    background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+    color: #fff;
+}
+
+.badge-reserved {
+    background: linear-gradient(135deg, #FF9800 0%, #FFA726 100%);
+    color: #fff;
+}
+
+.badge-sold {
+    background: linear-gradient(135deg, #9E9E9E 0%, #BDBDBD 100%);
+    color: #fff;
+}
+
+.badge-stayed {
+    background: linear-gradient(135deg, var(--col-accent) 0%, var(--col-accent-light) 100%);
+    color: #000;
+}
+
+/* Badge płci - lewy górny róg */
+.dog-gender-badge-hero {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+}
+
+.badge-male-hero,
+.badge-female-hero {
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.badge-male-hero {
+    background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);
+    color: #fff;
+}
+
+.badge-female-hero {
+    background: linear-gradient(135deg, #E94B8A 0%, #F76BA3 100%);
+    color: #fff;
+}
+
+/* Treść profilu */
+.dog-profile-content {
+    padding: 3rem;
+}
+
+/* Header z imieniem */
+.profile-header-dog {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid rgba(197, 160, 101, 0.3);
+}
+
+.profile-name-dog {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--col-heading);
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+/* Sekcje */
+.dog-info-section,
+.dog-description-section,
+.dog-vaccinations-section,
+.dog-achievements-section,
+.dog-gallery-section {
+    margin-bottom: 3rem;
+}
+
+.section-title-dog {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--col-accent);
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Elegancka tabela informacji */
+.info-table {
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(197, 160, 101, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid rgba(197, 160, 101, 0.1);
+    transition: background 0.3s ease;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row:hover {
+    background: rgba(197, 160, 101, 0.05);
+}
+
+.info-label {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--col-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.info-value {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--col-heading);
+    font-weight: 600;
+}
+
+/* Link w tabeli */
+.info-link {
+    color: var(--col-accent-light);
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.info-link:hover {
+    color: var(--col-accent);
+}
+
+/* Status inline z kropką */
+.status-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot-available {
+    background: #4CAF50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.status-dot-reserved {
+    background: #FF9800;
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+}
+
+.status-dot-sold {
+    background: #9E9E9E;
+    box-shadow: 0 0 10px rgba(158, 158, 158, 0.5);
+}
+
+.status-dot-stayed {
+    background: var(--col-accent);
+    box-shadow: 0 0 10px rgba(197, 160, 101, 0.5);
+}
+
+/* Sekcje tekstowe */
+.description-content-dog,
+.vaccinations-content,
+.achievements-content {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--col-text);
+    background: rgba(0, 0, 0, 0.15);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--col-accent);
+}
+
+.description-content-dog p,
+.vaccinations-content p,
+.achievements-content p {
+    margin-bottom: 1rem;
+}
+
+.description-content-dog p:last-child,
+.vaccinations-content p:last-child,
+.achievements-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Galeria zdjęć */
+.gallery-grid-dog {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.gallery-item-dog {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(197, 160, 101, 0.2);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.gallery-item-dog:hover {
+    transform: scale(1.05);
+    border-color: var(--col-accent);
+    box-shadow: 0 10px 25px rgba(197, 160, 101, 0.3);
+}
+
+.gallery-item-dog img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Przyciski akcji */
+.profile-actions-dog {
+    padding-top: 2.5rem;
+    border-top: 2px solid rgba(197, 160, 101, 0.3);
+}
+
+.btn-back-dog {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, var(--col-accent) 0%, var(--col-accent-light) 100%);
+    color: #000;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3);
+}
+
+.btn-back-dog:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4);
+    color: #000;
+}
+
+.btn-back-dog svg {
+    transition: transform 0.3s ease;
+}
+
+.btn-back-dog:hover svg {
+    transform: translateX(-5px);
+}
+
+/* =========================================
+   RESPONSYWNOŚĆ - DOG PROFILE
+   ========================================= */
+
+/* Tablet */
+@media (max-width: 992px) {
+    .dog-profile-hero {
+        height: 400px;
+    }
+
+    .dog-profile-content {
+        padding: 2.5rem 2rem;
+    }
+
+    .profile-name-dog {
+        font-size: 2.5rem;
+    }
+
+    .gallery-grid-dog {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .dog-profile-hero {
+        height: 350px;
+    }
+
+    .dog-profile-content {
+        padding: 2rem 1.5rem;
+    }
+
+    .profile-name-dog {
+        font-size: 2rem;
+    }
+
+    .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+
+    .info-value {
+        font-size: 1rem;
+    }
+
+    .gallery-grid-dog {
+        grid-template-columns: 1fr;
+    }
+
+    .dog-status-badge,
+    .dog-gender-badge-hero {
+        top: 10px;
+    }
+
+    .dog-status-badge {
+        right: 10px;
+    }
+
+    .dog-gender-badge-hero {
+        left: 10px;
+    }
+
+    .badge-available,
+    .badge-reserved,
+    .badge-sold,
+    .badge-stayed,
+    .badge-male-hero,
+    .badge-female-hero {
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Bardzo małe ekrany */
+@media (max-width: 480px) {
+    .dog-profile-hero {
+        height: 250px;
+    }
+
+    .dog-profile-content {
+        padding: 1.5rem 1rem;
+    }
+
+    .profile-name-dog {
+        font-size: 1.6rem;
+    }
+
+    .section-title-dog {
+        font-size: 1.3rem;
+    }
+
+    .description-content-dog,
+    .vaccinations-content,
+    .achievements-content {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .gallery-item-dog img {
+        height: 200px;
+    }
+}
+
+/* =========================================
+   RESPONSYWNOŚĆ
+   ========================================= */
+
+/* Tablet */
+@media (max-width: 992px) {
+    .dogs-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px 20px;
+    }
+
+    .dog-image {
+        height: 280px;
+    }
+
+    .dog-info {
+        padding: 1.5rem;
+    }
+
+    .dog-name {
+        font-size: 1.6rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .dogs-container {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .dog-image {
+        height: 250px;
+    }
+
+    .dog-info {
+        padding: 1.2rem;
+    }
+
+    .dog-name {
+        font-size: 1.5rem;
+    }
+}
+
+/* Bardzo małe ekrany */
+@media (max-width: 480px) {
+    .dog-image {
+        height: 200px;
+    }
+
+    .dog-badge {
+        top: 10px;
+        right: 10px;
+    }
+
+    .badge-male,
+    .badge-female {
+        padding: 6px 14px;
+        font-size: 0.7rem;
+    }
+}

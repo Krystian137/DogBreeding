@@ -1,46 +1,74 @@
 {% extends "base.html" %}
+
+{% block title %}Blog - Aktualności - Costa Rizada{% endblock %}
+
+{% block header_content %}
+    <h1>Aktualności z Hodowli</h1>
+    <span class="subheading">Najnowsze wydarzenia, porady i historie naszych pupili</span>
+{% endblock %}
+
 {% block content %}
-<h1 class="mb-4">Aktualności z hodowli</h1>
 
-<div class="row g-4">
+<!-- ✅ NOWY ASYMETRYCZNY LAYOUT -->
+<div class="blog-posts-container">
     {% for post in posts %}
-        <div class="col-12 col-sm-6 col-lg-4">
-            <article class="post-card h-100">
-                {% if post.photos.first %}
-                    <img src="{{ post.photos.first.image.url }}"
-                         class="post-card-img"
-                         alt="{{ post.title }}">
-                {% endif %}
-
-                <div class="post-card-body">
-                    <small class="post-date">
-                        {{ post.created_at|date:"d M Y" }}
-                    </small>
-
-                    <h2 class="post-title">
-                        <a href="{% url 'blog:post-detail' slug=post.slug %}">
-                            {{ post.title }}
-                        </a>
-                    </h2>
-
-                    <p class="post-excerpt">
-                        {{ post.content|truncatewords:18 }}
-                    </p>
+        <article class="post-card">
+            {% if post.photos.first %}
+                <img src="{{ post.photos.first.image.url }}"
+                     class="post-card-img"
+                     alt="{{ post.title }}"
+                     loading="lazy">
+            {% else %}
+                <!-- Placeholder jeśli brak zdjęcia -->
+                <div class="post-card-img post-card-img-placeholder">
+                    <span>🐕</span>
                 </div>
-            </article>
+            {% endif %}
+
+            <div class="post-card-body">
+                <span class="post-date">
+                    {{ post.created_at|date:"d M Y" }}
+                </span>
+
+                <h3 class="post-title">
+                    <a href="{% url 'blog:post-detail' slug=post.slug %}">
+                        {{ post.title }}
+                    </a>
+                </h3>
+
+                <p class="post-excerpt">
+                    {{ post.content|striptags|truncatewords:20 }}
+                </p>
+            </div>
+        </article>
+    {% empty %}
+        <!-- Komunikat gdy brak postów -->
+        <div class="no-posts-message">
+            <h3>Brak aktualności</h3>
+            <p>Wkrótce pojawią się nowe posty!</p>
         </div>
     {% endfor %}
 </div>
 
+<!-- Paginacja -->
 {% if is_paginated %}
-<div class="pagination mt-5">
-    {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}">← Poprzednia</a>
-    {% endif %}
-    <span>Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Następna →</a>
-    {% endif %}
-</div>
+<nav aria-label="Paginacja postów">
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" title="Pierwsza strona">« Pierwsza</a>
+            <a href="?page={{ page_obj.previous_page_number }}" title="Poprzednia strona">‹ Poprzednia</a>
+        {% endif %}
+
+        <span class="pagination-current">
+            Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" title="Następna strona">Następna ›</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" title="Ostatnia strona">Ostatnia »</a>
+        {% endif %}
+    </div>
+</nav>
 {% endif %}
+
 {% endblock %}

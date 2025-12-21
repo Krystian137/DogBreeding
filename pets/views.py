@@ -23,5 +23,5 @@ class LitterList(ListView):
 
 class LitterDetails(DetailView):
     model = Litter
-    template_name = 'blog/litter-details.html'
-    context_object_name = 'litter-details'
+    template_name = 'pets/litter-details.html'
+    context_object_name = 'litter'

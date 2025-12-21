@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ litter.name }} - Costa Rizada{% endblock %}
+
+{% block header_content %}
+    <h1>{{ litter.name }}</h1>
+    <span class="subheading">
+        {{ litter.birth_date|date:"d.m.Y" }} • {{ litter.total_puppies }} szczeniąt
+    </span>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/litters.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="litter-detail-container">
+    <div class="litter-detail-card">
+        <!-- Główne zdjęcie -->
+        <div class="litter-detail-hero">
+            {% if litter.photos.first %}
+                <img src="{{ litter.photos.first.image.url }}"
+                     alt="{{ litter.name }}"
+                     loading="lazy">
+            {% else %}
+                <div class="litter-hero-placeholder">
+                    <span>🐾</span>
+                </div>
+            {% endif %}
+
+            <!-- Badge z datą urodzenia -->
+            <div class="litter-date-badge">
+                <span class="badge-date">{{ litter.birth_date|date:"d M Y" }}</span>
+            </div>
+        </div>
+
+        <!-- Treść -->
+        <div class="litter-detail-content">
+            <!-- Nagłówek -->
+            <div class="detail-header">
+                <h1 class="detail-name">{{ litter.name }}</h1>
+
+                <!-- Badge z liczbą szczeniąt -->
+                <div class="detail-count-badge">
+                    <span class="badge-total">{{ litter.total_puppies }} szczeniąt</span>
+                </div>
+            </div>
+
+            <!-- Breakdown szczeniąt -->
+            <div class="puppies-breakdown">
+                <div class="breakdown-card breakdown-boys">
+                    <div class="breakdown-icon">♂</div>
+                    <div class="breakdown-number">{{ litter.boys_count }}</div>
+                    <div class="breakdown-label">Psy</div>
+                </div>
+
+                <div class="breakdown-card breakdown-girls">
+                    <div class="breakdown-icon">♀</div>
+                    <div class="breakdown-number">{{ litter.girls_count }}</div>
+                    <div class="breakdown-label">Suki</div>
+                </div>
+
+                <div class="breakdown-card breakdown-total">
+                    <div class="breakdown-icon">🐾</div>
+                    <div class="breakdown-number">{{ litter.total_puppies }}</div>
+                    <div class="breakdown-label">Razem</div>
+                </div>
+            </div>
+
+            <!-- Rodzice -->
+            <div class="parents-section">
+                <h3 class="section-title">Rodzice</h3>
+
+                <div class="parents-grid">
+                    {% if litter.mother %}
+                    <div class="parent-card parent-mother">
+                        <div class="parent-photo">
+                            {% if litter.mother.main_photo %}
+                                <img src="{{ litter.mother.main_photo.image.url }}"
+                                     alt="{{ litter.mother.name }}">
+                            {% elif litter.mother.photos.first %}
+                                <img src="{{ litter.mother.photos.first.image.url }}"
+                                     alt="{{ litter.mother.name }}">
+                            {% else %}
+                                <div class="parent-placeholder">♀</div>
+                            {% endif %}
+                        </div>
+                        <div class="parent-details">
+                            <span class="parent-role">Matka</span>
+                            <h4 class="parent-name">
+                                <a href="{% url 'zwierzaki:DogProfile' slug=litter.mother.slug %}">
+                                    {{ litter.mother.name }}
+                                </a>
+                            </h4>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if litter.father %}
+                    <div class="parent-card parent-father">
+                        <div class="parent-photo">
+                            {% if litter.father.main_photo %}
+                                <img src="{{ litter.father.main_photo.image.url }}"
+                                     alt="{{ litter.father.name }}">
+                            {% elif litter.father.photos.first %}
+                                <img src="{{ litter.father.photos.first.image.url }}"
+                                     alt="{{ litter.father.name }}">
+                            {% else %}
+                                <div class="parent-placeholder">♂</div>
+                            {% endif %}
+                        </div>
+                        <div class="parent-details">
+                            <span class="parent-role">Ojciec</span>
+                            <h4 class="parent-name">
+                                <a href="{% url 'zwierzaki:DogProfile' slug=litter.father.slug %}">
+                                    {{ litter.father.name }}
+                                </a>
+                            </h4>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Opis -->
+            {% if litter.description %}
+            <div class="litter-description-section">
+                <h3 class="section-title">O miocie</h3>
+                <div class="description-content">
+                    {{ litter.description|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Szczenięta z tego miotu -->
+            {% if litter.dogs.all %}
+            <div class="puppies-section">
+                <h3 class="section-title">Szczenięta z tego miotu</h3>
+
+                <div class="puppies-grid">
+                    {% for dog in litter.dogs.all %}
+                    <div class="puppy-card">
+                        <div class="puppy-image">
+                            {% if dog.main_photo %}
+                                <img src="{{ dog.main_photo.image.url }}"
+                                     alt="{{ dog.name }}">
+                            {% elif dog.photos.first %}
+                                <img src="{{ dog.photos.first.image.url }}"
+                                     alt="{{ dog.name }}">
+                            {% else %}
+                                <div class="puppy-placeholder">
+                                    {% if dog.gender == 'M' %}♂{% else %}♀{% endif %}
+                                </div>
+                            {% endif %}
+
+                            <!-- Badge płci -->
+                            <div class="puppy-gender-badge">
+                                {% if dog.gender == 'M' %}
+                                    <span class="badge-male-small">♂</span>
+                                {% else %}
+                                    <span class="badge-female-small">♀</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Badge statusu -->
+                            <div class="puppy-status-badge">
+                                {% if dog.status == 'available' %}
+                                    <span class="status-available">Dostępny</span>
+                                {% elif dog.status == 'reserved' %}
+                                    <span class="status-reserved">Rezerwacja</span>
+                                {% elif dog.status == 'sold' %}
+                                    <span class="status-sold">Sprzedany</span>
+                                {% elif dog.status == 'stayed' %}
+                                    <span class="status-stayed">W hodowli</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="puppy-info">
+                            <h4 class="puppy-name">
+                                <a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}">
+                                    {{ dog.name }}
+                                </a>
+                            </h4>
+                            {% if dog.age %}
+                            <p class="puppy-age">{{ dog.age }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Galeria zdjęć -->
+            {% if litter.photos.all|length > 1 %}
+            <div class="litter-gallery-section">
+                <h3 class="section-title">Galeria zdjęć</h3>
+                <div class="gallery-grid-litter">
+                    {% for photo in litter.photos.all %}
+                        {% if not forloop.first %}
+                        <div class="gallery-item-litter">
+                            <img src="{{ photo.image.url }}"
+                                 alt="{{ litter.name }}"
+                                 loading="lazy">
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Powrót -->
+            <div class="detail-actions">
+                <a href="{% url 'zwierzaki:LitterList' %}" class="btn-back-litter">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                    </svg>
+                    Powrót do miotów
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

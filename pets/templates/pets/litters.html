@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mioty - Costa Rizada{% endblock %}
+
+{% block header_content %}
+    <h1>Nasze Mioty</h1>
+    <span class="subheading">Historia naszych szczeniaków</span>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/litters.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="litters-container">
+    {% for litter in litters %}
+        <article class="litter-card">
+            <!-- Zdjęcie miotu -->
+            <div class="litter-image">
+                {% if litter.photos.first %}
+                    <img src="{{ litter.photos.first.image.url }}"
+                         alt="{{ litter.name }}"
+                         loading="lazy">
+                {% else %}
+                    <div class="litter-image-placeholder">
+                        <span>🐾</span>
+                    </div>
+                {% endif %}
+
+                <!-- Badge z liczbą szczeniąt -->
+                <div class="litter-badge">
+                    <span class="badge-puppies">{{ litter.total_puppies }} szczeniąt</span>
+                </div>
+            </div>
+
+            <!-- Informacje -->
+            <div class="litter-info">
+                <h3 class="litter-name">
+                    <a href="{% url 'zwierzaki:LitterDetails' slug=litter.slug %}">
+                        {{ litter.name }}
+                    </a>
+                </h3>
+
+                <p class="litter-date">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                    </svg>
+                    Urodzony: {{ litter.birth_date|date:"d.m.Y" }}
+                </p>
+
+                <!-- Rodzice -->
+                <div class="litter-parents">
+                    {% if litter.mother %}
+                    <div class="parent-info">
+                        <span class="parent-icon">♀</span>
+                        <span class="parent-label">Matka:</span>
+                        <a href="{% url 'zwierzaki:DogProfile' slug=litter.mother.slug %}">
+                            {{ litter.mother.name }}
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    {% if litter.father %}
+                    <div class="parent-info">
+                        <span class="parent-icon">♂</span>
+                        <span class="parent-label">Ojciec:</span>
+                        <a href="{% url 'zwierzaki:DogProfile' slug=litter.father.slug %}">
+                            {{ litter.father.name }}
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Szczenięta breakdown -->
+                <div class="puppies-count">
+                    <div class="count-item count-boys">
+                        <span class="count-icon">♂</span>
+                        <span class="count-number">{{ litter.boys_count }}</span>
+                        <span class="count-label">psy</span>
+                    </div>
+                    <div class="count-item count-girls">
+                        <span class="count-icon">♀</span>
+                        <span class="count-number">{{ litter.girls_count }}</span>
+                        <span class="count-label">suki</span>
+                    </div>
+                </div>
+
+                {% if litter.description %}
+                <p class="litter-description">
+                    {{ litter.description|truncatewords:20 }}
+                </p>
+                {% endif %}
+
+                <a href="{% url 'zwierzaki:LitterDetails' slug=litter.slug %}" class="litter-link">
+                    Zobacz szczegóły
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                    </svg>
+                </a>
+            </div>
+        </article>
+    {% empty %}
+        <div class="no-litters-message">
+            <h3>Brak miotów do wyświetlenia</h3>
+            <p>Sprawdź ponownie wkrótce!</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
