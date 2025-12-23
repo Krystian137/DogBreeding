@@ -33,7 +33,7 @@
                 </div>
             {% endif %}
 
-            <!-- Badge statusu -->
+            <!-- Badge statusu
             <div class="dog-status-badge">
                 {% if dog.status == 'available' %}
                     <span class="badge-available">Dostępny</span>
@@ -45,6 +45,7 @@
                     <span class="badge-stayed">W hodowli</span>
                 {% endif %}
             </div>
+             -->
 
             <!-- Badge płci -->
             <div class="dog-gender-badge-hero">
@@ -100,7 +101,7 @@
                         <span class="info-value">{{ dog.height }} cm</span>
                     </div>
                     {% endif %}
-
+                    <!-- Div for dog status
                     <div class="info-row">
                         <span class="info-label">Status</span>
                         <span class="info-value status-inline">
@@ -115,7 +116,7 @@
                             {% endif %}
                         </span>
                     </div>
-
+                    -->
                     {% if dog.litter %}
                     <div class="info-row">
                         <span class="info-label">Miot</span>
@@ -128,6 +129,141 @@
                     {% endif %}
                 </div>
             </div>
+
+            <!-- Drzewo genealogiczne -->
+            {% if dog.litter %}
+            <div class="pedigree-section">
+                <h3 class="section-title-dog">Rodowód</h3>
+
+                <div class="pedigree-tree">
+                    <!-- Poziom 0: Przeglądany pies -->
+                    <div class="pedigree-level pedigree-level-0">
+                        <div class="pedigree-dog pedigree-current">
+                            <div class="pedigree-name">{{ dog.name }}</div>
+                            <div class="pedigree-details">Bieżący</div>
+                        </div>
+                    </div>
+
+                    <!-- Poziom 1: Rodzice -->
+                    {% if dog.litter.mother or dog.litter.father %}
+                    <div class="pedigree-level pedigree-level-1">
+                        <!-- Matka -->
+                        {% if dog.litter.mother %}
+                        <div class="pedigree-dog pedigree-parent pedigree-mother" data-dog-id="{{ dog.litter.mother.id }}">
+                            <div class="pedigree-name">{{ dog.litter.mother.name }}</div>
+                            <div class="pedigree-details">♀ Matka</div>
+
+                            <!-- Hover popup -->
+                            <div class="pedigree-popup">
+                                {% if dog.litter.mother.main_photo %}
+                                <img src="{{ dog.litter.mother.main_photo.image.url }}" alt="{{ dog.litter.mother.name }}">
+                                {% elif dog.litter.mother.photos.first %}
+                                <img src="{{ dog.litter.mother.photos.first.image.url }}" alt="{{ dog.litter.mother.name }}">
+                                {% endif %}
+                                <div class="popup-info">
+                                    <strong>{{ dog.litter.mother.name }}</strong>
+                                    <span>{{ dog.litter.mother.get_gender_display }}</span>
+                                    {% if dog.litter.mother.color %}
+                                    <span>{{ dog.litter.mother.color }}</span>
+                                    {% endif %}
+                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.litter.mother.slug %}" class="popup-link">Zobacz profil →</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="pedigree-dog pedigree-unknown">
+                            <div class="pedigree-name">—</div>
+                            <div class="pedigree-details">♀ Matka</div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Ojciec -->
+                        {% if dog.litter.father %}
+                        <div class="pedigree-dog pedigree-parent pedigree-father" data-dog-id="{{ dog.litter.father.id }}">
+                            <div class="pedigree-name">{{ dog.litter.father.name }}</div>
+                            <div class="pedigree-details">♂ Ojciec</div>
+
+                            <!-- Hover popup -->
+                            <div class="pedigree-popup">
+                                {% if dog.litter.father.main_photo %}
+                                <img src="{{ dog.litter.father.main_photo.image.url }}" alt="{{ dog.litter.father.name }}">
+                                {% elif dog.litter.father.photos.first %}
+                                <img src="{{ dog.litter.father.photos.first.image.url }}" alt="{{ dog.litter.father.name }}">
+                                {% endif %}
+                                <div class="popup-info">
+                                    <strong>{{ dog.litter.father.name }}</strong>
+                                    <span>{{ dog.litter.father.get_gender_display }}</span>
+                                    {% if dog.litter.father.color %}
+                                    <span>{{ dog.litter.father.color }}</span>
+                                    {% endif %}
+                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.litter.father.slug %}" class="popup-link">Zobacz profil →</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="pedigree-dog pedigree-unknown">
+                            <div class="pedigree-name">—</div>
+                            <div class="pedigree-details">♂ Ojciec</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Poziom 2: Dziadkowie -->
+                    {% if dog.litter.mother.litter or dog.litter.father.litter %}
+                    <div class="pedigree-level pedigree-level-2">
+                        <!-- Dziadkowie ze strony matki -->
+                        {% if dog.litter.mother.litter %}
+                            {% if dog.litter.mother.litter.mother %}
+                            <div class="pedigree-dog pedigree-grandparent">
+                                <div class="pedigree-name">{{ dog.litter.mother.litter.mother.name }}</div>
+                                <div class="pedigree-details">♀ Babcia</div>
+                            </div>
+                            {% else %}
+                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                            {% endif %}
+
+                            {% if dog.litter.mother.litter.father %}
+                            <div class="pedigree-dog pedigree-grandparent">
+                                <div class="pedigree-name">{{ dog.litter.mother.litter.father.name }}</div>
+                                <div class="pedigree-details">♂ Dziadek</div>
+                            </div>
+                            {% else %}
+                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                            {% endif %}
+                        {% else %}
+                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                        {% endif %}
+
+                        <!-- Dziadkowie ze strony ojca -->
+                        {% if dog.litter.father.litter %}
+                            {% if dog.litter.father.litter.mother %}
+                            <div class="pedigree-dog pedigree-grandparent">
+                                <div class="pedigree-name">{{ dog.litter.father.litter.mother.name }}</div>
+                                <div class="pedigree-details">♀ Babcia</div>
+                            </div>
+                            {% else %}
+                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                            {% endif %}
+
+                            {% if dog.litter.father.litter.father %}
+                            <div class="pedigree-dog pedigree-grandparent">
+                                <div class="pedigree-name">{{ dog.litter.father.litter.father.name }}</div>
+                                <div class="pedigree-details">♂ Dziadek</div>
+                            </div>
+                            {% else %}
+                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                            {% endif %}
+                        {% else %}
+                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
 
             <!-- Opis -->
             {% if dog.description %}

@@ -13,16 +13,15 @@
 /* Karta psa */
 .dog-card {
     background: rgba(40, 35, 30, 0.75);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(8px); /* Zmniejszone z 12px */
+    -webkit-backdrop-filter: blur(8px);
     border: 2px solid var(--col-accent);
     border-radius: 12px;
     overflow: hidden;
     box-shadow:
-        0 10px 30px rgba(0,0,0,0.5),
-        0 5px 15px rgba(0,0,0,0.4),
+        0 8px 20px rgba(0,0,0,0.4), /* Zmniejszone */
         inset 0 1px 0 rgba(255,255,255,0.1);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Uproszczone */
     position: relative;
     animation: fadeInUp 0.6s ease-out backwards;
 }
@@ -37,12 +36,10 @@
 
 /* Hover */
 .dog-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-8px); /* Zmniejszone z -10px */
     box-shadow:
-        0 20px 50px rgba(0,0,0,0.6),
-        0 10px 30px rgba(197, 160, 101, 0.4),
+        0 15px 35px rgba(0,0,0,0.5), /* Zmniejszone */
         inset 0 1px 0 rgba(255,255,255,0.15);
-    border-color: var(--col-accent-light);
 }
 
 /* Złota linia na górze */
@@ -518,6 +515,264 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
 }
+
+/* =========================================
+   PEDIGREE TREE - Drzewo genealogiczne
+   ========================================= */
+
+.pedigree-section {
+    margin-bottom: 3rem;
+}
+
+.pedigree-tree {
+    background: rgba(0, 0, 0, 0.15);
+    border: 2px solid rgba(197, 160, 101, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    overflow-x: auto;
+}
+
+/* Poziomy drzewa */
+.pedigree-level {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.pedigree-level:last-child {
+    margin-bottom: 0;
+}
+
+/* Linie łączące poziomy */
+.pedigree-level::before {
+    content: "";
+    position: absolute;
+    top: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 1rem;
+    background: rgba(197, 160, 101, 0.3);
+}
+
+.pedigree-level-0::before {
+    display: none;
+}
+
+/* Węzeł drzewa (pies) */
+.pedigree-dog {
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(197, 160, 101, 0.3);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    min-width: 180px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.pedigree-dog:hover {
+    border-color: var(--col-accent);
+    background: rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Bieżący pies */
+.pedigree-current {
+    background: rgba(197, 160, 101, 0.15);
+    border: 2px solid var(--col-accent);
+    min-width: 220px;
+}
+
+.pedigree-current .pedigree-name {
+    font-size: 1.3rem;
+    color: var(--col-accent);
+}
+
+/* Rodzice */
+.pedigree-parent {
+    min-width: 200px;
+}
+
+.pedigree-mother {
+    border-color: rgba(233, 75, 138, 0.5);
+}
+
+.pedigree-mother:hover {
+    border-color: #E94B8A;
+}
+
+.pedigree-father {
+    border-color: rgba(74, 144, 226, 0.5);
+}
+
+.pedigree-father:hover {
+    border-color: #4A90E2;
+}
+
+/* Dziadkowie */
+.pedigree-grandparent {
+    min-width: 160px;
+    font-size: 0.9rem;
+}
+
+/* Nieznany pies */
+.pedigree-unknown {
+    background: rgba(0, 0, 0, 0.1);
+    border-style: dashed;
+    border-color: rgba(197, 160, 101, 0.2);
+    opacity: 0.5;
+    cursor: default;
+}
+
+.pedigree-unknown:hover {
+    transform: none;
+}
+
+/* Teksty w węzłach */
+.pedigree-name {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--col-heading);
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+}
+
+.pedigree-details {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--col-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Popup przy hover */
+.pedigree-popup {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(40, 35, 30, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid var(--col-accent);
+    border-radius: 12px;
+    padding: 1rem;
+    width: 280px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.pedigree-dog:hover .pedigree-popup {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(15px);
+}
+
+.pedigree-popup img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.8rem;
+}
+
+.popup-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.popup-info strong {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--col-heading);
+}
+
+.popup-info span {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--col-text-muted);
+}
+
+.popup-link {
+    margin-top: 0.5rem;
+    color: var(--col-accent);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.popup-link:hover {
+    color: var(--col-accent-light);
+}
+
+/* Responsywność drzewa */
+@media (max-width: 992px) {
+    .pedigree-tree {
+        padding: 1.5rem;
+    }
+
+    .pedigree-level {
+        gap: 1rem;
+    }
+
+    .pedigree-dog {
+        min-width: 140px;
+        padding: 0.8rem 1rem;
+    }
+
+    .pedigree-current {
+        min-width: 180px;
+    }
+
+    .pedigree-parent {
+        min-width: 160px;
+    }
+
+    .pedigree-grandparent {
+        min-width: 120px;
+    }
+
+    .pedigree-name {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .pedigree-level {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .pedigree-dog {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .pedigree-popup {
+        left: 0;
+        right: 0;
+        transform: none;
+        margin: 0 auto;
+        width: calc(100% - 2rem);
+    }
+
+    .pedigree-dog:hover .pedigree-popup {
+        transform: translateY(10px);
+    }
+}
+
+/* Galeria zdjęć (kontynuacja) */
 
 .gallery-item-dog {
     border-radius: 12px;

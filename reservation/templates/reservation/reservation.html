@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Rezerwacja szczeniąt | Kontakt - Costa Rizada{% endblock %}
+
+{% block header_content %}
+    <h1>Rezerwacja i Kontakt</h1>
+    <span class="subheading">Zarezerwuj szczeniaka lub skontaktuj się z nami</span>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/reservation.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="contact-container">
+
+    <!-- SEO Content - O hodowli -->
+    <section class="about-section">
+        <h2 class="section-title-contact">O hodowli Costa Rizada</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>
+                    <strong>Costa Rizada</strong> to profesjonalna hodowla psów rasowych z wieloletnim doświadczeniem.
+                    Specjalizujemy się w hodowli [RASA PSÓW], stawiając na zdrowie, temperament i zgodność ze standardem rasy.
+                </p>
+                <p>
+                    Nasze szczenięta wychowują się w domowych warunkach, otoczone miłością i troską.
+                    Każdy pies otrzymuje:
+                </p>
+                <ul class="about-list">
+                    <li>Komplet szczepień zgodny z wiekiem</li>
+                    <li>Odrobaczenie</li>
+                    <li>Chip identyfikacyjny</li>
+                    <li>Rodowód FCI</li>
+                    <li>Umowę kupna-sprzedaży</li>
+                    <li>Paszport szczeniaka</li>
+                    <li>Pakiet startowy (karma, zabawki)</li>
+                </ul>
+                <p>
+                    Jesteśmy zarejestrowaną hodowlą z certyfikatami i referencjami.
+                    Współpracujemy z najlepszymi lekarzami weterynarii oraz behaviorystami,
+                    aby zapewnić naszym podopiecznym najwyższą jakość opieki.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formularz rezerwacji -->
+    <section class="reservation-section">
+        <h2 class="section-title-contact">Formularz rezerwacji</h2>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message message-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" class="reservation-form" id="reservationForm">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_name">Imię i nazwisko *</label>
+                    <input type="text"
+                           id="id_name"
+                           name="name"
+                           required
+                           maxlength="200"
+                           placeholder="Jan Kowalski">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_email">Email *</label>
+                    <input type="email"
+                           id="id_email"
+                           name="email"
+                           required
+                           maxlength="200"
+                           placeholder="jan.kowalski@example.com">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_phone">Telefon *</label>
+                    <input type="tel"
+                           id="id_phone"
+                           name="phone"
+                           required
+                           maxlength="20"
+                           placeholder="+48 123 456 789">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_dog">Zainteresowanie szczeniakiem (opcjonalnie)</label>
+                    <select id="id_dog" name="dog">
+                        <option value="">-- Wybierz psa lub pozostaw puste --</option>
+                        {% for dog in available_dogs %}
+                        <option value="{{ dog.id }}">{{ dog.name }} - {{ dog.get_gender_display }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_subject">Temat *</label>
+                <select id="id_subject" name="subject" required>
+                    <option value="">-- Wybierz temat --</option>
+                    <option value="reservation">Rezerwacja szczeniaka</option>
+                    <option value="info">Pytanie o hodowlę</option>
+                    <option value="visit">Umówienie wizyty</option>
+                    <option value="other">Inne</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_message">Wiadomość *</label>
+                <textarea id="id_message"
+                          name="message"
+                          required
+                          rows="6"
+                          placeholder="Proszę opisać swoje zainteresowanie, pytania lub uwagi..."></textarea>
+            </div>
+
+            <div class="form-group form-checkbox">
+                <input type="checkbox"
+                       id="id_consent"
+                       name="consent"
+                       required>
+                <label for="id_consent">
+                    Wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie z
+                    <a href="#" class="consent-link">polityką prywatności</a> *
+                </label>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/>
+                </svg>
+                Wyślij wiadomość
+            </button>
+
+            <p class="form-note">
+                * Pola wymagane. Odpowiemy w ciągu 24-48 godzin.
+            </p>
+        </form>
+    </section>
+
+    <!-- Dane kontaktowe -->
+    <section class="contact-info-section">
+        <h2 class="section-title-contact">Dane kontaktowe</h2>
+
+        <div class="contact-cards">
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                    </svg>
+                </div>
+                <h3>Telefon</h3>
+                <p><a href="tel:+48123456789">+48 123 456 789</a></p>
+                <p class="contact-hours">Pn-Pt: 9:00-18:00</p>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+                    </svg>
+                </div>
+                <h3>Email</h3>
+                <p><a href="mailto:kontakt@costarizada.pl">kontakt@costarizada.pl</a></p>
+                <p class="contact-hours">Odpowiadamy w 24-48h</p>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                    </svg>
+                </div>
+                <h3>Lokalizacja</h3>
+                <p>Wrocław, Polska</p>
+                <p class="contact-hours">Wizyty po umówieniu</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <h2 class="section-title-contact">Najczęściej zadawane pytania</h2>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <h3 class="faq-question">Jak przebiega proces rezerwacji szczeniaka?</h3>
+                <div class="faq-answer">
+                    <p>Proces rezerwacji składa się z kilku kroków:</p>
+                    <ol>
+                        <li>Wypełnienie formularza kontaktowego</li>
+                        <li>Rozmowa telefoniczna lub mailowa</li>
+                        <li>Umówienie wizyty w hodowli (opcjonalnie)</li>
+                        <li>Wpłata zadatku rezerwacyjnego</li>
+                        <li>Odbiór szczeniaka po ukończeniu 8 tygodnia życia</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Ile kosztuje szczeniak?</h3>
+                <div class="faq-answer">
+                    <p>Cena szczeniaka zależy od wielu czynników, w tym od linii krwi, tytułów rodziców i planów hodowlanych.
+                    Szczegółowe informacje o cenach przekazujemy podczas bezpośredniego kontaktu.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Czy mogę odwiedzić hodowlę przed rezerwacją?</h3>
+                <div class="faq-answer">
+                    <p>Tak! Zachęcamy do odwiedzin. Proszę o wcześniejsze umówienie się, abyśmy mogli poświęcić Państwu
+                    wystarczająco dużo czasu i pokazać naszą hodowlę oraz szczenięta.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Jakie dokumenty otrzymam wraz ze szczeniakiem?</h3>
+                <div class="faq-answer">
+                    <p>Wraz ze szczeniakiem otrzymują Państwo:</p>
+                    <ul>
+                        <li>Rodowód FCI</li>
+                        <li>Książeczkę zdrowia z wpisanymi szczepieniami</li>
+                        <li>Paszport szczeniaka</li>
+                        <li>Umowę kupna-sprzedaży</li>
+                        <li>Certyfikat chipu</li>
+                        <li>Instrukcje pielęgnacji i żywienia</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Czy zapewniacie wsparcie po zakupie?</h3>
+                <div class="faq-answer">
+                    <p>Oczywiście! Pozostajemy w kontakcie z wszystkimi właścicielami naszych szczeniąt.
+                    Udzielamy porad dotyczących żywienia, pielęgnacji i wychowania. Jesteśmy dostępni telefonicznie i mailowo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

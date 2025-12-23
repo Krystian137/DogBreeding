@@ -42,13 +42,16 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto py-4 py-lg-0">
                 <li class="nav-item">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'blog:main' %}">Blog</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'zwierzaki:DogList' %}">Psy</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'zwierzaki:LitterList' %}">Mioty</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'blog:main' %}">Blog</a>
+                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'rezerwacja:reservation-form' %}">Kontakt</a>
                 </li>
             </ul>
         </div>
@@ -84,7 +87,23 @@
 
         <div class="row g-4">
             <!-- BLOK 1 -->
-            <div class="col-md-4">
+
+
+            <!-- BLOK 2 -->
+
+
+            <!-- BLOK 3 -->
+
+
+            <div class="col-md-4 text-center">
+                <div class="h-100 p-4 rounded-3">
+                    <h4 class="footer-heading">Kontakt</h4>
+                    <p class="mb-1">ul. Leśna 15, 00-000 Warszawa</p>
+                    <p class="mb-1">+48 600 000 000</p>
+                    <p class="mb-0">kontakt@dogbreeding.pl</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
                 <div class="h-100 p-4 rounded-3">
                     <h4 class="footer-heading">Costa Rizada</h4>
                     <p class="mb-0">
@@ -94,8 +113,7 @@
                 </div>
             </div>
 
-            <!-- BLOK 2 -->
-            <div class="col-md-4 text-md-center">
+            <div class="col-md-4 text-center">
                 <div class="h-100 p-4 rounded-3">
                     <h4 class="footer-heading">Na skróty</h4>
                     <p class="mb-0">
@@ -104,16 +122,6 @@
                         <a href="{% url 'blog:main' %}">Blog</a><br>
                         <a href="#">Kontakt</a>
                     </p>
-                </div>
-            </div>
-
-            <!-- BLOK 3 -->
-            <div class="col-md-4 text-md-end">
-                <div class="h-100 p-4 rounded-3">
-                    <h4 class="footer-heading">Kontakt</h4>
-                    <p class="mb-1">ul. Leśna 15, 00-000 Warszawa</p>
-                    <p class="mb-1">+48 600 000 000</p>
-                    <p class="mb-0">kontakt@dogbreeding.pl</p>
                 </div>
             </div>
         </div>

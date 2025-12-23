@@ -1,8 +1,8 @@
 from django.urls import path
 from . import views
 
-app_name = 'reservation'
+app_name = 'rezerwacja'
 
 urlpatterns = [
-    path('rezerwuj/', views.RezerwacjaFormView.as_view(), name='rezerwacja'),
+    path('rezerwacja/', views.ReservationFormView.as_view(), name='reservation-form'),
 ]
