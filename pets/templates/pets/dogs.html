@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block extra_head %}
+<!-- CSS for dogs page -->
 <link rel="stylesheet" href="{% static 'css/dogs.css' %}">
 {% endblock %}
 
@@ -16,7 +17,7 @@
 <div class="dogs-container">
     {% for dog in dogs %}
         <article class="dog-card">
-            <!-- Zdjęcie psa -->
+            <!-- Dog Photo -->
             <div class="dog-image">
                 {% if dog.main_image %}
                     <img src="{{ dog.main_image.url }}" 
@@ -32,7 +33,7 @@
                     </div>
                 {% endif %}
 
-                <!-- Badge z płcią -->
+                <!-- Badge with gender -->
                 <div class="dog-badge">
                     {% if dog.gender == 'M' %}
                         <span class="badge-male">♂ Pies</span>
@@ -42,7 +43,7 @@
                 </div>
             </div>
 
-            <!-- Informacje -->
+            <!-- Info -->
             <div class="dog-info">
                 <h3 class="dog-name">
                     <a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}">

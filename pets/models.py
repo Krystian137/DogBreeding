@@ -47,6 +47,23 @@ class Dog(models.Model):
         Litter, on_delete=SET_NULL, null=True, blank=True,
         related_name='dogs', verbose_name="Miot"
     )
+
+    mother = models.ForeignKey(
+        'self', on_delete=SET_NULL, null=True, blank=True,
+        related_name='children_as_mother',
+        verbose_name="Matka (opcjonalnie)",
+        limit_choices_to={'gender': 'F'},
+        help_text="Zostaw puste jeśli rodzice są w miocie. Ustaw tylko dla głównych psów hodowlanych."
+    )
+
+    father = models.ForeignKey(
+        'self', on_delete=SET_NULL, null=True, blank=True,
+        related_name='children_as_father',
+        verbose_name="Ojciec (opcjonalnie)",
+        limit_choices_to={'gender': 'M'},
+        help_text="Zostaw puste jeśli rodzice są w miocie. Ustaw tylko dla głównych psów hodowlanych."
+    )
+
     gender = models.CharField(
         max_length=2, choices=Gender.choices, default=Gender.MALE, verbose_name="Płeć"
     )
@@ -65,6 +82,42 @@ class Dog(models.Model):
     class Meta:
         verbose_name = "Pies"
         verbose_name_plural = "Psy"
+
+    @property
+    def get_mother(self):
+        if self.mother:
+            return self.mother
+        if self.litter and self.litter.mother:
+            return self.litter.mother
+        return None
+
+    @property
+    def get_father(self):
+        if self.father:
+            return self.father
+        if self.litter and self.litter.father:
+            return self.litter.father
+        return None
+
+    @property
+    def get_maternal_grandmother(self):
+        mother = self.get_mother
+        return mother.get_mother if mother else None
+
+    @property
+    def get_maternal_grandfather(self):
+        mother = self.get_mother
+        return mother.get_father if mother else None
+
+    @property
+    def get_paternal_grandmother(self):
+        father = self.get_father
+        return father.get_mother if father else None
+
+    @property
+    def get_paternal_grandfather(self):
+        father = self.get_father
+        return father.get_father if father else None
 
     @property
     def age(self):

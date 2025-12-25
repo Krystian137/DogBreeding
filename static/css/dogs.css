@@ -397,6 +397,85 @@
     letter-spacing: 0.5px;
 }
 
+/* =========================================
+   INFO GRID - NOWY STYL (Kafelki 2x2)
+   ========================================= */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.info-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(197, 160, 101, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-card:hover {
+    background: rgba(197, 160, 101, 0.05);
+    border-color: var(--col-accent);
+    transform: translateY(-3px);
+}
+
+.info-icon {
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+}
+
+.info-card-label {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--col-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.info-card-value {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    color: var(--col-heading);
+    font-weight: 600;
+}
+
+/* Info table full - dla długich wartości */
+.info-table-full {
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(197, 160, 101, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.info-row-full {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid rgba(197, 160, 101, 0.1);
+    transition: background 0.3s ease;
+}
+
+.info-row-full:last-child {
+    border-bottom: none;
+}
+
+.info-row-full:hover {
+    background: rgba(197, 160, 101, 0.05);
+}
+
+/* =========================================
+   STARA TABELA (pozostawiona dla kompatybilności)
+   ========================================= */
+
 /* Elegancka tabela informacji */
 .info-table {
     background: rgba(0, 0, 0, 0.2);
@@ -529,7 +608,8 @@
     border: 2px solid rgba(197, 160, 101, 0.2);
     border-radius: 12px;
     padding: 2rem;
-    overflow-x: auto;
+    /* USUNIĘTE: overflow-x: auto; - powodowało obcinanie popupów */
+    position: relative; /* Dodane dla popupów */
 }
 
 /* Poziomy drzewa */
@@ -650,13 +730,13 @@
     letter-spacing: 1px;
 }
 
-/* Popup przy hover */
+/* Popup przy hover - POPRAWIONY */
 .pedigree-popup {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 10px); /* Zmienione z translate */
     left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background: rgba(40, 35, 30, 0.95);
+    transform: translateX(-50%);
+    background: rgba(40, 35, 30, 0.98); /* Bardziej solid */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 2px solid var(--col-accent);
@@ -667,13 +747,15 @@
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
-    z-index: 100;
+    z-index: 1000; /* Zwiększone z 100 */
+    pointer-events: none; /* Żeby nie przeszkadzał */
 }
 
 .pedigree-dog:hover .pedigree-popup {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(15px);
+    top: calc(100% + 15px); /* Lekkie przesunięcie na hover */
+    pointer-events: auto;
 }
 
 .pedigree-popup img {
@@ -748,6 +830,11 @@
 }
 
 @media (max-width: 768px) {
+    /* UKRYJ DZIADKÓW NA MOBILE */
+    .pedigree-grandparents-only {
+        display: none !important;
+    }
+
     .pedigree-level {
         flex-direction: column;
         align-items: center;
@@ -765,10 +852,39 @@
         transform: none;
         margin: 0 auto;
         width: calc(100% - 2rem);
+        max-width: 280px;
     }
 
     .pedigree-dog:hover .pedigree-popup {
-        transform: translateY(10px);
+        transform: none;
+        top: calc(100% + 10px);
+    }
+
+    /* WIĘKSZY FONT W HEADER NA MOBILE */
+    header.masthead .site-heading h1 {
+        font-size: 3.2rem !important; /* Zwiększone z 2.8rem */
+    }
+
+    header.masthead .site-heading .subheading {
+        font-size: 1.4rem !important; /* Zwiększone z 1.2rem */
+    }
+
+    /* INFO GRID - 2x2 na mobile */
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .info-card {
+        padding: 1.2rem;
+    }
+
+    .info-icon {
+        font-size: 1.8rem;
+    }
+
+    .info-card-value {
+        font-size: 1.1rem;
     }
 }
 
@@ -934,6 +1050,36 @@
 
     .gallery-item-dog img {
         height: 200px;
+    }
+
+    /* JESZCZE WIĘKSZY HEADER NA MAŁYM MOBILE */
+    header.masthead .site-heading h1 {
+        font-size: 2.6rem !important; /* Zwiększone z 2.2rem */
+    }
+
+    header.masthead .site-heading .subheading {
+        font-size: 1.2rem !important; /* Zwiększone z 1rem */
+    }
+
+    /* INFO GRID - mniejszy padding */
+    .info-grid {
+        gap: 10px;
+    }
+
+    .info-card {
+        padding: 1rem 0.8rem;
+    }
+
+    .info-icon {
+        font-size: 1.5rem;
+    }
+
+    .info-card-label {
+        font-size: 0.75rem;
+    }
+
+    .info-card-value {
+        font-size: 1rem;
     }
 }
 

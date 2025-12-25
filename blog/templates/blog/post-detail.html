@@ -9,18 +9,19 @@
 {% endblock %}
 
 {% block extra_head %}
+<!-- CSS for post detail page -->
 <link rel="stylesheet" href="{% static 'css/post.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="post-detail-container">
     <article class="post-detail-card">
-        <!-- Badge z datą -->
+        <!-- Badge with a date -->
         <div class="post-badge">
             <span class="post-badge-date">{{ post.created_at|date:"d M Y" }}</span>
         </div>
 
-        <!-- Główne zdjęcie -->
+        <!-- Main Photo -->
         {% if post.photos.first %}
         <div class="post-hero-image">
             <img src="{{ post.photos.first.image.url }}" 
@@ -29,7 +30,7 @@
         </div>
         {% endif %}
 
-        <!-- Treść posta -->
+        <!-- Post content -->
         <div class="post-content">
             <h1 class="post-detail-title">{{ post.title }}</h1>
             
@@ -53,7 +54,7 @@
                 {{ post.content|safe|linebreaks }}
             </div>
 
-            <!-- Galeria zdjęć (jeśli jest więcej niż jedno) -->
+            <!-- Photos for 1 or more -->
             {% if post.photos.all|length > 1 %}
             <div class="post-gallery">
                 <h3 class="gallery-title text-white">Galeria zdjęć</h3>
@@ -72,7 +73,7 @@
             {% endif %}
         </div>
 
-        <!-- Powrót do listy -->
+        <!-- Back button -->
         <div class="post-actions">
             <a href="{% url 'blog:main' %}" class="btn-back">
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">

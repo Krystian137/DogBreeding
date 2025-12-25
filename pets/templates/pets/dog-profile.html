@@ -17,7 +17,7 @@
 {% block content %}
 <div class="dog-profile-container">
     <div class="dog-profile-card">
-        <!-- Główne zdjęcie -->
+        <!-- Main Photo  -->
         <div class="dog-profile-hero">
             {% if dog.main_photo %}
                 <img src="{{ dog.main_photo.image.url }}" 
@@ -33,21 +33,7 @@
                 </div>
             {% endif %}
 
-            <!-- Badge statusu
-            <div class="dog-status-badge">
-                {% if dog.status == 'available' %}
-                    <span class="badge-available">Dostępny</span>
-                {% elif dog.status == 'reserved' %}
-                    <span class="badge-reserved">Zarezerwowany</span>
-                {% elif dog.status == 'sold' %}
-                    <span class="badge-sold">Sprzedany</span>
-                {% elif dog.status == 'stayed' %}
-                    <span class="badge-stayed">W hodowli</span>
-                {% endif %}
-            </div>
-             -->
-
-            <!-- Badge płci -->
+            <!-- Badge - gender -->
             <div class="dog-gender-badge-hero">
                 {% if dog.gender == 'M' %}
                     <span class="badge-male-hero">♂ {{ dog.get_gender_display }}</span>
@@ -57,68 +43,61 @@
             </div>
         </div>
 
-        <!-- Treść profilu -->
+        <!-- Profile content -->
         <div class="dog-profile-content">
-            <!-- Nagłówek -->
+            <!-- Name -->
             <div class="profile-header-dog">
                 <h1 class="profile-name-dog">{{ dog.name }}</h1>
             </div>
 
-            <!-- Informacje podstawowe - elegancka tabela -->
+            <!-- Table with dog information - NOWA WERSJA -->
             <div class="dog-info-section">
                 <h3 class="section-title-dog">Informacje podstawowe</h3>
 
-                <div class="info-table">
-                    <div class="info-row">
-                        <span class="info-label">Płeć</span>
-                        <span class="info-value">{{ dog.get_gender_display }}</span>
+                <!-- Grid 2x2 dla krótkich info (mobile-friendly) -->
+                <div class="info-grid">
+                    <div class="info-card">
+                        <span class="info-icon">♂♀</span>
+                        <span class="info-card-label">Płeć</span>
+                        <span class="info-card-value">{{ dog.get_gender_display }}</span>
                     </div>
 
                     {% if dog.age %}
-                    <div class="info-row">
-                        <span class="info-label">Wiek</span>
-                        <span class="info-value">{{ dog.age }}</span>
+                    <div class="info-card">
+                        <span class="info-icon">🎂</span>
+                        <span class="info-card-label">Wiek</span>
+                        <span class="info-card-value">{{ dog.age }}</span>
                     </div>
                     {% endif %}
 
+                    {% if dog.weight %}
+                    <div class="info-card">
+                        <span class="info-icon">⚖️</span>
+                        <span class="info-card-label">Waga</span>
+                        <span class="info-card-value">{{ dog.weight }} kg</span>
+                    </div>
+                    {% endif %}
+
+                    {% if dog.height %}
+                    <div class="info-card">
+                        <span class="info-icon">📏</span>
+                        <span class="info-card-label">Wzrost</span>
+                        <span class="info-card-value">{{ dog.height }} cm</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Długie info - pełna szerokość -->
+                <div class="info-table-full">
                     {% if dog.color %}
-                    <div class="info-row">
+                    <div class="info-row-full">
                         <span class="info-label">Umaszczenie</span>
                         <span class="info-value">{{ dog.color }}</span>
                     </div>
                     {% endif %}
 
-                    {% if dog.weight %}
-                    <div class="info-row">
-                        <span class="info-label">Waga</span>
-                        <span class="info-value">{{ dog.weight }} kg</span>
-                    </div>
-                    {% endif %}
-
-                    {% if dog.height %}
-                    <div class="info-row">
-                        <span class="info-label">Wzrost</span>
-                        <span class="info-value">{{ dog.height }} cm</span>
-                    </div>
-                    {% endif %}
-                    <!-- Div for dog status
-                    <div class="info-row">
-                        <span class="info-label">Status</span>
-                        <span class="info-value status-inline">
-                            {% if dog.status == 'available' %}
-                                <span class="status-dot status-dot-available"></span> Dostępny
-                            {% elif dog.status == 'reserved' %}
-                                <span class="status-dot status-dot-reserved"></span> Zarezerwowany
-                            {% elif dog.status == 'sold' %}
-                                <span class="status-dot status-dot-sold"></span> Sprzedany
-                            {% elif dog.status == 'stayed' %}
-                                <span class="status-dot status-dot-stayed"></span> W hodowli
-                            {% endif %}
-                        </span>
-                    </div>
-                    -->
                     {% if dog.litter %}
-                    <div class="info-row">
+                    <div class="info-row-full">
                         <span class="info-label">Miot</span>
                         <span class="info-value">
                             <a href="{% url 'zwierzaki:LitterDetails' slug=dog.litter.slug %}" class="info-link">
@@ -130,13 +109,13 @@
                 </div>
             </div>
 
-            <!-- Drzewo genealogiczne -->
-            {% if dog.litter %}
+            <!-- Genealogical Tree - POPRAWIONE! -->
+            {% if dog.get_mother or dog.get_father %}
             <div class="pedigree-section">
                 <h3 class="section-title-dog">Rodowód</h3>
 
                 <div class="pedigree-tree">
-                    <!-- Poziom 0: Przeglądany pies -->
+                    <!-- 0: Current Dog -->
                     <div class="pedigree-level pedigree-level-0">
                         <div class="pedigree-dog pedigree-current">
                             <div class="pedigree-name">{{ dog.name }}</div>
@@ -144,29 +123,28 @@
                         </div>
                     </div>
 
-                    <!-- Poziom 1: Rodzice -->
-                    {% if dog.litter.mother or dog.litter.father %}
+                    <!-- 1: Parents -->
                     <div class="pedigree-level pedigree-level-1">
-                        <!-- Matka -->
-                        {% if dog.litter.mother %}
-                        <div class="pedigree-dog pedigree-parent pedigree-mother" data-dog-id="{{ dog.litter.mother.id }}">
-                            <div class="pedigree-name">{{ dog.litter.mother.name }}</div>
+                        <!-- Mother -->
+                        {% if dog.get_mother %}
+                        <div class="pedigree-dog pedigree-parent pedigree-mother" data-dog-id="{{ dog.get_mother.id }}">
+                            <div class="pedigree-name">{{ dog.get_mother.name }}</div>
                             <div class="pedigree-details">♀ Matka</div>
 
                             <!-- Hover popup -->
                             <div class="pedigree-popup">
-                                {% if dog.litter.mother.main_photo %}
-                                <img src="{{ dog.litter.mother.main_photo.image.url }}" alt="{{ dog.litter.mother.name }}">
-                                {% elif dog.litter.mother.photos.first %}
-                                <img src="{{ dog.litter.mother.photos.first.image.url }}" alt="{{ dog.litter.mother.name }}">
+                                {% if dog.get_mother.main_photo %}
+                                <img src="{{ dog.get_mother.main_photo.image.url }}" alt="{{ dog.get_mother.name }}">
+                                {% elif dog.get_mother.photos.first %}
+                                <img src="{{ dog.get_mother.photos.first.image.url }}" alt="{{ dog.get_mother.name }}">
                                 {% endif %}
                                 <div class="popup-info">
-                                    <strong>{{ dog.litter.mother.name }}</strong>
-                                    <span>{{ dog.litter.mother.get_gender_display }}</span>
-                                    {% if dog.litter.mother.color %}
-                                    <span>{{ dog.litter.mother.color }}</span>
+                                    <strong>{{ dog.get_mother.name }}</strong>
+                                    <span>{{ dog.get_mother.get_gender_display }}</span>
+                                    {% if dog.get_mother.color %}
+                                    <span>{{ dog.get_mother.color }}</span>
                                     {% endif %}
-                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.litter.mother.slug %}" class="popup-link">Zobacz profil →</a>
+                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_mother.slug %}" class="popup-link">Zobacz profil →</a>
                                 </div>
                             </div>
                         </div>
@@ -177,26 +155,26 @@
                         </div>
                         {% endif %}
 
-                        <!-- Ojciec -->
-                        {% if dog.litter.father %}
-                        <div class="pedigree-dog pedigree-parent pedigree-father" data-dog-id="{{ dog.litter.father.id }}">
-                            <div class="pedigree-name">{{ dog.litter.father.name }}</div>
+                        <!-- Father -->
+                        {% if dog.get_father %}
+                        <div class="pedigree-dog pedigree-parent pedigree-father" data-dog-id="{{ dog.get_father.id }}">
+                            <div class="pedigree-name">{{ dog.get_father.name }}</div>
                             <div class="pedigree-details">♂ Ojciec</div>
 
                             <!-- Hover popup -->
                             <div class="pedigree-popup">
-                                {% if dog.litter.father.main_photo %}
-                                <img src="{{ dog.litter.father.main_photo.image.url }}" alt="{{ dog.litter.father.name }}">
-                                {% elif dog.litter.father.photos.first %}
-                                <img src="{{ dog.litter.father.photos.first.image.url }}" alt="{{ dog.litter.father.name }}">
+                                {% if dog.get_father.main_photo %}
+                                <img src="{{ dog.get_father.main_photo.image.url }}" alt="{{ dog.get_father.name }}">
+                                {% elif dog.get_father.photos.first %}
+                                <img src="{{ dog.get_father.photos.first.image.url }}" alt="{{ dog.get_father.name }}">
                                 {% endif %}
                                 <div class="popup-info">
-                                    <strong>{{ dog.litter.father.name }}</strong>
-                                    <span>{{ dog.litter.father.get_gender_display }}</span>
-                                    {% if dog.litter.father.color %}
-                                    <span>{{ dog.litter.father.color }}</span>
+                                    <strong>{{ dog.get_father.name }}</strong>
+                                    <span>{{ dog.get_father.get_gender_display }}</span>
+                                    {% if dog.get_father.color %}
+                                    <span>{{ dog.get_father.color }}</span>
                                     {% endif %}
-                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.litter.father.slug %}" class="popup-link">Zobacz profil →</a>
+                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_father.slug %}" class="popup-link">Zobacz profil →</a>
                                 </div>
                             </div>
                         </div>
@@ -207,57 +185,116 @@
                         </div>
                         {% endif %}
                     </div>
-                    {% endif %}
 
-                    <!-- Poziom 2: Dziadkowie -->
-                    {% if dog.litter.mother.litter or dog.litter.father.litter %}
-                    <div class="pedigree-level pedigree-level-2">
-                        <!-- Dziadkowie ze strony matki -->
-                        {% if dog.litter.mother.litter %}
-                            {% if dog.litter.mother.litter.mother %}
-                            <div class="pedigree-dog pedigree-grandparent">
-                                <div class="pedigree-name">{{ dog.litter.mother.litter.mother.name }}</div>
-                                <div class="pedigree-details">♀ Babcia</div>
-                            </div>
-                            {% else %}
-                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
-                            {% endif %}
+                    <!-- 2: Grandparents - TYLKO DESKTOP - DODANE POPUPY! -->
+                    {% if dog.get_maternal_grandmother or dog.get_maternal_grandfather or dog.get_paternal_grandmother or dog.get_paternal_grandfather %}
+                    <div class="pedigree-level pedigree-level-2 pedigree-grandparents-only">
+                        <!-- Maternal Grandmother -->
+                        {% if dog.get_maternal_grandmother %}
+                        <div class="pedigree-dog pedigree-grandparent">
+                            <div class="pedigree-name">{{ dog.get_maternal_grandmother.name }}</div>
+                            <div class="pedigree-details">♀ Babcia</div>
 
-                            {% if dog.litter.mother.litter.father %}
-                            <div class="pedigree-dog pedigree-grandparent">
-                                <div class="pedigree-name">{{ dog.litter.mother.litter.father.name }}</div>
-                                <div class="pedigree-details">♂ Dziadek</div>
+                            <!-- Hover popup - DODANE! -->
+                            <div class="pedigree-popup">
+                                {% if dog.get_maternal_grandmother.main_photo %}
+                                <img src="{{ dog.get_maternal_grandmother.main_photo.image.url }}" alt="{{ dog.get_maternal_grandmother.name }}">
+                                {% elif dog.get_maternal_grandmother.photos.first %}
+                                <img src="{{ dog.get_maternal_grandmother.photos.first.image.url }}" alt="{{ dog.get_maternal_grandmother.name }}">
+                                {% endif %}
+                                <div class="popup-info">
+                                    <strong>{{ dog.get_maternal_grandmother.name }}</strong>
+                                    <span>{{ dog.get_maternal_grandmother.get_gender_display }}</span>
+                                    {% if dog.get_maternal_grandmother.color %}
+                                    <span>{{ dog.get_maternal_grandmother.color }}</span>
+                                    {% endif %}
+                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_maternal_grandmother.slug %}" class="popup-link">Zobacz profil →</a>
+                                </div>
                             </div>
-                            {% else %}
-                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
-                            {% endif %}
+                        </div>
                         {% else %}
-                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
-                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                        <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
                         {% endif %}
 
-                        <!-- Dziadkowie ze strony ojca -->
-                        {% if dog.litter.father.litter %}
-                            {% if dog.litter.father.litter.mother %}
-                            <div class="pedigree-dog pedigree-grandparent">
-                                <div class="pedigree-name">{{ dog.litter.father.litter.mother.name }}</div>
-                                <div class="pedigree-details">♀ Babcia</div>
-                            </div>
-                            {% else %}
-                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
-                            {% endif %}
+                        <!-- Maternal Grandfather -->
+                        {% if dog.get_maternal_grandfather %}
+                        <div class="pedigree-dog pedigree-grandparent">
+                            <div class="pedigree-name">{{ dog.get_maternal_grandfather.name }}</div>
+                            <div class="pedigree-details">♂ Dziadek</div>
 
-                            {% if dog.litter.father.litter.father %}
-                            <div class="pedigree-dog pedigree-grandparent">
-                                <div class="pedigree-name">{{ dog.litter.father.litter.father.name }}</div>
-                                <div class="pedigree-details">♂ Dziadek</div>
+                            <!-- Hover popup - DODANE! -->
+                            <div class="pedigree-popup">
+                                {% if dog.get_maternal_grandfather.main_photo %}
+                                <img src="{{ dog.get_maternal_grandfather.main_photo.image.url }}" alt="{{ dog.get_maternal_grandfather.name }}">
+                                {% elif dog.get_maternal_grandfather.photos.first %}
+                                <img src="{{ dog.get_maternal_grandfather.photos.first.image.url }}" alt="{{ dog.get_maternal_grandfather.name }}">
+                                {% endif %}
+                                <div class="popup-info">
+                                    <strong>{{ dog.get_maternal_grandfather.name }}</strong>
+                                    <span>{{ dog.get_maternal_grandfather.get_gender_display }}</span>
+                                    {% if dog.get_maternal_grandfather.color %}
+                                    <span>{{ dog.get_maternal_grandfather.color }}</span>
+                                    {% endif %}
+                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_maternal_grandfather.slug %}" class="popup-link">Zobacz profil →</a>
+                                </div>
                             </div>
-                            {% else %}
-                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
-                            {% endif %}
+                        </div>
                         {% else %}
-                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
-                            <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                        <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                        {% endif %}
+
+                        <!-- Paternal Grandmother -->
+                        {% if dog.get_paternal_grandmother %}
+                        <div class="pedigree-dog pedigree-grandparent">
+                            <div class="pedigree-name">{{ dog.get_paternal_grandmother.name }}</div>
+                            <div class="pedigree-details">♀ Babcia</div>
+
+                            <!-- Hover popup - DODANE! -->
+                            <div class="pedigree-popup">
+                                {% if dog.get_paternal_grandmother.main_photo %}
+                                <img src="{{ dog.get_paternal_grandmother.main_photo.image.url }}" alt="{{ dog.get_paternal_grandmother.name }}">
+                                {% elif dog.get_paternal_grandmother.photos.first %}
+                                <img src="{{ dog.get_paternal_grandmother.photos.first.image.url }}" alt="{{ dog.get_paternal_grandmother.name }}">
+                                {% endif %}
+                                <div class="popup-info">
+                                    <strong>{{ dog.get_paternal_grandmother.name }}</strong>
+                                    <span>{{ dog.get_paternal_grandmother.get_gender_display }}</span>
+                                    {% if dog.get_paternal_grandmother.color %}
+                                    <span>{{ dog.get_paternal_grandmother.color }}</span>
+                                    {% endif %}
+                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_paternal_grandmother.slug %}" class="popup-link">Zobacz profil →</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
+                        {% endif %}
+
+                        <!-- Paternal Grandfather -->
+                        {% if dog.get_paternal_grandfather %}
+                        <div class="pedigree-dog pedigree-grandparent">
+                            <div class="pedigree-name">{{ dog.get_paternal_grandfather.name }}</div>
+                            <div class="pedigree-details">♂ Dziadek</div>
+
+                            <!-- Hover popup - DODANE! -->
+                            <div class="pedigree-popup">
+                                {% if dog.get_paternal_grandfather.main_photo %}
+                                <img src="{{ dog.get_paternal_grandfather.main_photo.image.url }}" alt="{{ dog.get_paternal_grandfather.name }}">
+                                {% elif dog.get_paternal_grandfather.photos.first %}
+                                <img src="{{ dog.get_paternal_grandfather.photos.first.image.url }}" alt="{{ dog.get_paternal_grandfather.name }}">
+                                {% endif %}
+                                <div class="popup-info">
+                                    <strong>{{ dog.get_paternal_grandfather.name }}</strong>
+                                    <span>{{ dog.get_paternal_grandfather.get_gender_display }}</span>
+                                    {% if dog.get_paternal_grandfather.color %}
+                                    <span>{{ dog.get_paternal_grandfather.color }}</span>
+                                    {% endif %}
+                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_paternal_grandfather.slug %}" class="popup-link">Zobacz profil →</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
                         {% endif %}
                     </div>
                     {% endif %}
@@ -265,7 +302,7 @@
             </div>
             {% endif %}
 
-            <!-- Opis -->
+            <!-- Description -->
             {% if dog.description %}
             <div class="dog-description-section">
                 <h3 class="section-title-dog">O {{ dog.name }}</h3>
@@ -275,7 +312,7 @@
             </div>
             {% endif %}
 
-            <!-- Szczepienia -->
+            <!-- Vaccinations -->
             {% if dog.vaccinations %}
             <div class="dog-vaccinations-section">
                 <h3 class="section-title-dog">Szczepienia</h3>
@@ -285,7 +322,7 @@
             </div>
             {% endif %}
 
-            <!-- Osiągnięcia -->
+            <!-- Achievements -->
             {% if dog.achievements %}
             <div class="dog-achievements-section">
                 <h3 class="section-title-dog">Osiągnięcia</h3>
@@ -295,7 +332,7 @@
             </div>
             {% endif %}
 
-            <!-- Galeria zdjęć -->
+            <!-- Photos -->
             {% if dog.photos.all|length > 1 %}
             <div class="dog-gallery-section">
                 <h3 class="section-title-dog">Galeria zdjęć</h3>
@@ -313,7 +350,7 @@
             </div>
             {% endif %}
 
-            <!-- Akcje -->
+            <!-- Back button -->
             <div class="profile-actions-dog">
                 <a href="{% url 'zwierzaki:DogList' %}" class="btn-back-dog">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
