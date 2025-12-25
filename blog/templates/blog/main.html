@@ -2,15 +2,15 @@
 
 {% load static %}
 
-{% block title %}Blog - Aktualności - Costa Rizada{% endblock %}
+{% block title %}Costa Rizada - Hodowla Psów Rasowych{% endblock %}
 
 {% block header_content %}
     <h1>Aktualności z Hodowli</h1>
-    <span class="subheading">Najnowsze wydarzenia, porady i historie naszych pupili</span>
+<!--    <span class="subheading"></span> -->
 {% endblock %}
 
 {% block extra_head %}
-<!-- Dedykowany CSS dla bloga -->
+<!-- Dedicated CSS file -->
 <link rel="stylesheet" href="{% static 'css/blog.css' %}">
 {% endblock %}
 
@@ -58,7 +58,7 @@
     {% endfor %}
 </div>
 
-<!-- Paginacja -->
+<!-- Pages -->
 {% if is_paginated %}
 <nav aria-label="Paginacja postów">
     <div class="pagination">

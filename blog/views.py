@@ -8,7 +8,7 @@ class MainPageView(ListView):
     template_name = 'blog/main.html'
     context_object_name = 'posts'
     ordering = ['-created_at']
-    paginate_by = 10
+    paginate_by = 9
 
 class PostDetailView(DetailView):
     model = Post

@@ -55,8 +55,13 @@ body::before {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: scroll; /* ← ZMIENIONE z fixed! */
     z-index: -2;
+
+    /* Optimizacje scrollowania */
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 /* === OVERLAY - PRZYCIEMNIENIE TŁA === */
@@ -199,6 +204,7 @@ main.container {
     padding-top: 80px !important; /* Przestrzeń po headerze */
     padding-bottom: 100px !important;
 }
+
 
 /* =========================================
    5. PAGINACJA

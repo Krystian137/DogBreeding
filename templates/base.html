@@ -65,10 +65,10 @@
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="site-heading">
                     {% block header_content %}
-                        <!-- Opcja 1: Logo (odkomentuj gdy będziesz mieć logo) -->
+                        <!-- Option 1 Logo -->
                         <!-- <img src="{% static 'img/logo.png' %}" alt="Costa Rizada" class="header-logo"> -->
 
-                        <!-- Opcja 2: Tekst (aktualnie aktywna) -->
+                        <!-- Option 2 TEXT -->
                         <h1>Costa Rizada</h1>
                         <span class="subheading">Hodowla Psów Rasowych</span>
                         
@@ -122,7 +122,7 @@
         <div class="row text-center">
             <div class="col-12">
                 <p class="copyright mb-0">
-                    © 2025 Costa Rizada. Wszelkie prawa zastrzeżone.
+                    © {% now "Y" %} Costa Rizada. Wszelkie prawa zastrzeżone.
                 </p>
             </div>
         </div>
