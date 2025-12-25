@@ -241,6 +241,21 @@ section {
     color: #EF5350;
 }
 
+/* Error messages w polach formularza */
+.error-message {
+    display: block;
+    color: #EF5350;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    font-family: var(--font-body);
+}
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+    border-color: #F44336;
+}
+
 /* =========================================
    DANE KONTAKTOWE
    ========================================= */

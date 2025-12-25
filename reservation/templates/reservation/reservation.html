@@ -65,77 +65,65 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="id_name">Imię i nazwisko *</label>
-                    <input type="text"
-                           id="id_name"
-                           name="name"
-                           required
-                           maxlength="200"
-                           placeholder="Jan Kowalski">
+                    <label for="{{ form.name.id_for_label }}">{{ form.name.label }} *</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <span class="error-message">{{ form.name.errors.0 }}</span>
+                    {% endif %}
                 </div>
 
                 <div class="form-group">
-                    <label for="id_email">Email *</label>
-                    <input type="email"
-                           id="id_email"
-                           name="email"
-                           required
-                           maxlength="200"
-                           placeholder="jan.kowalski@example.com">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }} *</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <span class="error-message">{{ form.email.errors.0 }}</span>
+                    {% endif %}
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="id_phone">Telefon *</label>
-                    <input type="tel"
-                           id="id_phone"
-                           name="phone"
-                           required
-                           maxlength="20"
-                           placeholder="+48 123 456 789">
+                    <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }} *</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <span class="error-message">{{ form.phone.errors.0 }}</span>
+                    {% endif %}
                 </div>
 
                 <div class="form-group">
-                    <label for="id_dog">Zainteresowanie szczeniakiem (opcjonalnie)</label>
-                    <select id="id_dog" name="dog">
-                        <option value="">-- Wybierz psa lub pozostaw puste --</option>
-                        {% for dog in available_dogs %}
-                        <option value="{{ dog.id }}">{{ dog.name }} - {{ dog.get_gender_display }}</option>
-                        {% endfor %}
-                    </select>
+                    <label for="{{ form.dog.id_for_label }}">{{ form.dog.label }}</label>
+                    {{ form.dog }}
+                    {% if form.dog.errors %}
+                        <span class="error-message">{{ form.dog.errors.0 }}</span>
+                    {% endif %}
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="id_subject">Temat *</label>
-                <select id="id_subject" name="subject" required>
-                    <option value="">-- Wybierz temat --</option>
-                    <option value="reservation">Rezerwacja szczeniaka</option>
-                    <option value="info">Pytanie o hodowlę</option>
-                    <option value="visit">Umówienie wizyty</option>
-                    <option value="other">Inne</option>
-                </select>
+                <label for="{{ form.subject.id_for_label }}">{{ form.subject.label }} *</label>
+                {{ form.subject }}
+                {% if form.subject.errors %}
+                    <span class="error-message">{{ form.subject.errors.0 }}</span>
+                {% endif %}
             </div>
 
             <div class="form-group">
-                <label for="id_message">Wiadomość *</label>
-                <textarea id="id_message"
-                          name="message"
-                          required
-                          rows="6"
-                          placeholder="Proszę opisać swoje zainteresowanie, pytania lub uwagi..."></textarea>
+                <label for="{{ form.message.id_for_label }}">{{ form.message.label }} *</label>
+                {{ form.message }}
+                {% if form.message.errors %}
+                    <span class="error-message">{{ form.message.errors.0 }}</span>
+                {% endif %}
             </div>
 
             <div class="form-group form-checkbox">
-                <input type="checkbox"
-                       id="id_consent"
-                       name="consent"
-                       required>
-                <label for="id_consent">
-                    Wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie z
-                    <a href="#" class="consent-link">polityką prywatności</a> *
+                {{ form.consent }}
+                <label for="{{ form.consent.id_for_label }}">
+                    {{ form.consent.label }} *
+                    <a href="#" class="consent-link">polityka prywatności</a>
                 </label>
+                {% if form.consent.errors %}
+                    <span class="error-message">{{ form.consent.errors.0 }}</span>
+                {% endif %}
             </div>
 
             <button type="submit" class="btn-submit">
@@ -250,6 +238,51 @@
             </div>
         </div>
     </section>
-
 </div>
+
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "PetStore",
+      "name": "Costa Rizada",
+      "description": "Profesjonalna hodowla psów rasowych z wieloletnim doświadczeniem",
+      "url": "https://twojadomena.pl",
+      "telephone": "+48-123-456-789",
+      "email": "kontakt@costarizada.pl",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Wrocław",
+        "addressCountry": "PL"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "51.1079",
+        "longitude": "17.0385"
+      },
+      "priceRange": "$$",
+      "image": "https://twojadomena.pl/static/images/logo.jpg"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Jak przebiega proces rezerwacji szczeniaka?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Proces rezerwacji składa się z kilku kroków: wypełnienie formularza, rozmowa, wizyta (opcjonalnie), wpłata zadatku, odbiór po 8 tygodniu."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Ile kosztuje szczeniak?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Cena szczeniaka zależy od wielu czynników. Szczegółowe informacje przekazujemy podczas bezpośredniego kontaktu."
+        }
+      }]
+    }
+</script>
 {% endblock %}

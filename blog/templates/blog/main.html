@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}Blog - Aktualności - Costa Rizada{% endblock %}
 
 {% block header_content %}
@@ -7,9 +9,14 @@
     <span class="subheading">Najnowsze wydarzenia, porady i historie naszych pupili</span>
 {% endblock %}
 
+{% block extra_head %}
+<!-- Dedykowany CSS dla bloga -->
+<link rel="stylesheet" href="{% static 'css/blog.css' %}">
+{% endblock %}
+
 {% block content %}
 
-<!-- ✅ NOWY ASYMETRYCZNY LAYOUT -->
+<!-- Blog Posts Container -->
 <div class="blog-posts-container">
     {% for post in posts %}
         <article class="post-card">
@@ -17,9 +24,11 @@
                 <img src="{{ post.photos.first.image.url }}"
                      class="post-card-img"
                      alt="{{ post.title }}"
-                     loading="lazy">
+                     loading="lazy"
+                     decoding="async"
+                     width="400"
+                     height="280">
             {% else %}
-                <!-- Placeholder jeśli brak zdjęcia -->
                 <div class="post-card-img post-card-img-placeholder">
                     <span>🐕</span>
                 </div>
@@ -42,7 +51,6 @@
             </div>
         </article>
     {% empty %}
-        <!-- Komunikat gdy brak postów -->
         <div class="no-posts-message">
             <h3>Brak aktualności</h3>
             <p>Wkrótce pojawią się nowe posty!</p>
@@ -55,8 +63,8 @@
 <nav aria-label="Paginacja postów">
     <div class="pagination">
         {% if page_obj.has_previous %}
-            <a href="?page=1" title="Pierwsza strona">« Pierwsza</a>
-            <a href="?page={{ page_obj.previous_page_number }}" title="Poprzednia strona">‹ Poprzednia</a>
+            <a href="?page=1" title="Pierwsza strona" rel="first">« Pierwsza</a>
+            <a href="?page={{ page_obj.previous_page_number }}" title="Poprzednia strona" rel="prev">‹ Poprzednia</a>
         {% endif %}
 
         <span class="pagination-current">
@@ -64,8 +72,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" title="Następna strona">Następna ›</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}" title="Ostatnia strona">Ostatnia »</a>
+            <a href="?page={{ page_obj.next_page_number }}" title="Następna strona" rel="next">Następna ›</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" title="Ostatnia strona" rel="last">Ostatnia »</a>
         {% endif %}
     </div>
 </nav>
