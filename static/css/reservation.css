@@ -1,5 +1,5 @@
 /* =========================================
-   CONTACT PAGE - Rezerwacja i kontakt
+   CONTACT PAGE - GLOBAL & LAYOUT
    ========================================= */
 
 .contact-container {
@@ -7,10 +7,6 @@
     margin: 0 auto;
     padding: 0 20px;
 }
-
-/* =========================================
-   SEKCJE
-   ========================================= */
 
 section {
     margin-bottom: 4rem;
@@ -25,19 +21,23 @@ section {
     font-weight: 700;
 }
 
-/* =========================================
-   O HODOWLI (SEO Content)
-   ========================================= */
-
-.about-section {
+/* Wspólny styl dla "szklanych" paneli (DRY - Don't Repeat Yourself) */
+.about-section,
+.reservation-section,
+.contact-info-section,
+.faq-section {
     background: rgba(40, 35, 30, 0.75);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 2px solid var(--col-accent);
     border-radius: 12px;
     padding: 3rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
+
+/* =========================================
+   O HODOWLI (SEO Content)
+   ========================================= */
 
 .about-content {
     font-family: var(--font-body);
@@ -80,16 +80,6 @@ section {
    FORMULARZ REZERWACJI
    ========================================= */
 
-.reservation-section {
-    background: rgba(40, 35, 30, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 2px solid var(--col-accent);
-    border-radius: 12px;
-    padding: 3rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
-
 .reservation-form {
     max-width: 100%;
 }
@@ -114,34 +104,48 @@ section {
     margin-bottom: 0.5rem;
 }
 
+/* Scalone style inputów (usunięto duplikaty i !important) */
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="tel"],
 .form-group select,
-.form-group textarea {
+.form-group textarea,
+.form-control {
     width: 100%;
-    padding: 0.8rem 1rem;
+    padding: 0.8rem 1rem; /* ok. 12px 16px */
     background: rgba(0, 0, 0, 0.3);
     border: 2px solid rgba(197, 160, 101, 0.2);
     border-radius: 8px;
     font-family: var(--font-body);
     font-size: 1rem;
-    color: var(--col-text);
+    color: #fff; /* Wymuszony biały tekst dla czytelności na ciemnym tle */
     transition: all 0.3s ease;
 }
 
+/* Placeholder styling */
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    opacity: 1; /* Fix dla Firefoxa */
+}
+
+/* Focus state */
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-control:focus {
     outline: none;
     border-color: var(--col-accent);
     background: rgba(0, 0, 0, 0.4);
+    color: #fff;
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-    color: var(--col-text-muted);
-    opacity: 0.7;
+/* Select options */
+.form-group select option,
+.form-control option {
+    color: #fff;
+    background: #2a2520; /* Ciemne tło dla rozwijanej listy */
 }
 
 .form-group textarea {
@@ -149,11 +153,12 @@ section {
     min-height: 120px;
 }
 
-/* Checkbox consent */
+/* Checkbox & Consent */
 .form-checkbox {
     display: flex;
     align-items: flex-start;
     gap: 0.8rem;
+    margin-top: 1rem;
 }
 
 .form-checkbox input[type="checkbox"] {
@@ -161,6 +166,7 @@ section {
     width: 18px;
     height: 18px;
     cursor: pointer;
+    accent-color: var(--col-accent); /* Nowoczesny sposób stylowania checkboxa */
 }
 
 .form-checkbox label {
@@ -168,6 +174,7 @@ section {
     font-size: 0.9rem;
     color: var(--col-text-muted);
     cursor: pointer;
+    line-height: 1.4;
 }
 
 .consent-link {
@@ -179,10 +186,21 @@ section {
     color: var(--col-accent-light);
 }
 
-/* Przycisk submit */
+.form-note {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--col-text-muted);
+    font-style: italic;
+}
+
+/* =========================================
+   PRZYCISKI I KOMUNIKATY
+   ========================================= */
+
 .btn-submit {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.8rem;
     padding: 1rem 2.5rem;
     background: linear-gradient(135deg, var(--col-accent) 0%, var(--col-accent-light) 100%);
@@ -195,6 +213,7 @@ section {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3);
+    margin-top: 1rem;
 }
 
 .btn-submit:hover {
@@ -210,41 +229,39 @@ section {
     transform: translateX(3px);
 }
 
-.form-note {
-    margin-top: 1.5rem;
-    font-size: 0.85rem;
-    color: var(--col-text-muted);
-    font-style: italic;
-}
-
-/* Wiadomości */
+/* Wiadomości i Walidacja (Scalone style) */
 .messages {
     margin-bottom: 2rem;
 }
 
-.message {
+.message,
+.message-success,
+.message-error {
     padding: 1rem 1.5rem;
     border-radius: 8px;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     font-family: var(--font-body);
+    font-size: 0.95rem;
 }
 
 .message-success {
     background: rgba(76, 175, 80, 0.2);
-    border: 2px solid #4CAF50;
-    color: #66BB6A;
+    border: 1px solid #4CAF50; /* Uproszczony border */
+    border-left: 4px solid #4CAF50;
+    color: #a5d6a7;
 }
 
 .message-error {
     background: rgba(244, 67, 54, 0.2);
-    border: 2px solid #F44336;
-    color: #EF5350;
+    border: 1px solid #F44336;
+    border-left: 4px solid #F44336;
+    color: #ef9a9a;
 }
 
-/* Error messages w polach formularza */
+/* Inline input errors */
 .error-message {
     display: block;
-    color: #EF5350;
+    color: #ff6b6b;
     font-size: 0.85rem;
     margin-top: 0.4rem;
     font-family: var(--font-body);
@@ -253,22 +270,13 @@ section {
 .form-group input.error,
 .form-group select.error,
 .form-group textarea.error {
-    border-color: #F44336;
+    border-color: #ff6b6b;
+    box-shadow: 0 0 5px rgba(255, 107, 107, 0.3);
 }
 
 /* =========================================
-   DANE KONTAKTOWE
+   DANE KONTAKTOWE (KARTY)
    ========================================= */
-
-.contact-info-section {
-    background: rgba(40, 35, 30, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 2px solid var(--col-accent);
-    border-radius: 12px;
-    padding: 3rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
 
 .contact-cards {
     display: grid;
@@ -283,33 +291,40 @@ section {
     padding: 2rem 1.5rem;
     text-align: center;
     transition: all 0.3s ease;
+    height: 100%; /* Wyrównanie wysokości */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .contact-card:hover {
     border-color: var(--col-accent);
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .contact-icon {
     width: 60px;
     height: 60px;
-    margin: 0 auto 1rem;
+    margin-bottom: 1rem;
     background: rgba(197, 160, 101, 0.15);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .contact-icon svg {
     color: var(--col-accent);
+    width: 24px;
+    height: 24px;
 }
 
 .contact-card h3 {
     font-family: var(--font-heading);
     font-size: 1.2rem;
-    color: var(--col-heading);
+    color: var(--col-heading, #fff); /* Fallback to white if var missing */
     margin-bottom: 0.8rem;
 }
 
@@ -334,21 +349,13 @@ section {
 .contact-hours {
     font-size: 0.85rem;
     color: var(--col-text-muted);
+    margin-top: auto; /* Pycha godziny na dół karty */
+    padding-top: 1rem;
 }
 
 /* =========================================
    FAQ
    ========================================= */
-
-.faq-section {
-    background: rgba(40, 35, 30, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 2px solid var(--col-accent);
-    border-radius: 12px;
-    padding: 3rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
 
 .faq-list {
     display: flex;
@@ -388,8 +395,8 @@ section {
     margin-bottom: 0.8rem;
 }
 
-.faq-answer ol,
-.faq-answer ul {
+.faq-answer ul,
+.faq-answer ol {
     margin-left: 1.5rem;
     margin-top: 0.8rem;
 }
@@ -399,10 +406,10 @@ section {
 }
 
 /* =========================================
-   RESPONSYWNOŚĆ
+   RESPONSYWNOŚĆ (MEDIA QUERIES)
    ========================================= */
 
-/* Tablet */
+/* Tablet & Smaller Laptops */
 @media (max-width: 992px) {
     .contact-cards {
         grid-template-columns: 1fr;
@@ -442,7 +449,7 @@ section {
 
     .btn-submit {
         width: 100%;
-        justify-content: center;
+        margin-top: 1.5rem;
     }
 }
 
@@ -457,6 +464,7 @@ section {
 
     .section-title-contact {
         font-size: 1.4rem;
+        margin-bottom: 1.5rem;
     }
 
     .contact-icon {
@@ -464,8 +472,7 @@ section {
         height: 50px;
     }
 
-    .contact-icon svg {
-        width: 20px;
-        height: 20px;
+    .contact-card {
+        padding: 1.5rem 1rem;
     }
 }

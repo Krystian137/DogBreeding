@@ -1,8 +1,8 @@
 /* =========================================
-   DOGS - Lista psów
+   DOGS - Dog List
    ========================================= */
 
-/* Kontener */
+/* Container */
 .dogs-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -10,23 +10,23 @@
     margin-bottom: 4rem;
 }
 
-/* Karta psa */
+/* Dog card */
 .dog-card {
     background: rgba(40, 35, 30, 0.75);
-    backdrop-filter: blur(8px); /* Zmniejszone z 12px */
+    backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 2px solid var(--col-accent);
     border-radius: 12px;
     overflow: hidden;
     box-shadow:
-        0 8px 20px rgba(0,0,0,0.4), /* Zmniejszone */
+        0 8px 20px rgba(0,0,0,0.4),
         inset 0 1px 0 rgba(255,255,255,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Uproszczone */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     animation: fadeInUp 0.6s ease-out backwards;
 }
 
-/* Opóźnienie animacji */
+/* Animation delay */
 .dog-card:nth-child(1) { animation-delay: 0.1s; }
 .dog-card:nth-child(2) { animation-delay: 0.2s; }
 .dog-card:nth-child(3) { animation-delay: 0.3s; }
@@ -36,13 +36,13 @@
 
 /* Hover */
 .dog-card:hover {
-    transform: translateY(-8px); /* Zmniejszone z -10px */
+    transform: translateY(-8px);
     box-shadow:
-        0 15px 35px rgba(0,0,0,0.5), /* Zmniejszone */
+        0 15px 35px rgba(0,0,0,0.5),
         inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
-/* Złota linia na górze */
+/* Golden line on top */
 .dog-card::before {
     content: "";
     position: absolute;
@@ -60,7 +60,7 @@
     z-index: 10;
 }
 
-/* Zdjęcie psa */
+/* Dog image */
 .dog-image {
     position: relative;
     width: 100%;
@@ -79,7 +79,7 @@
     transform: scale(1.1);
 }
 
-/* Placeholder gdy brak zdjęcia */
+/* Placeholder when no photo */
 .dog-image-placeholder {
     width: 100%;
     height: 100%;
@@ -91,7 +91,7 @@
     font-size: 5rem;
 }
 
-/* Badge płci */
+/* Gender badge */
 .dog-badge {
     position: absolute;
     top: 15px;
@@ -121,12 +121,12 @@
     color: #fff;
 }
 
-/* Informacje o psie */
+/* Dog info */
 .dog-info {
     padding: 2rem;
 }
 
-/* Imię psa */
+/* Dog name */
 .dog-name {
     font-family: var(--font-heading);
     font-size: 1.8rem;
@@ -135,7 +135,7 @@
 }
 
 .dog-name a {
-    color: var(--col-heading); /* Jasny */
+    color: var(--col-heading);
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -144,12 +144,12 @@
     color: var(--col-accent-light);
 }
 
-/* Wiek */
+/* Age */
 .dog-age {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--col-text-muted); /* Jasny szary */
+    color: var(--col-text-muted);
     font-family: var(--font-body);
     font-size: 0.9rem;
     margin-bottom: 1rem;
@@ -159,16 +159,16 @@
     color: var(--col-accent);
 }
 
-/* Opis */
+/* Description */
 .dog-description {
-    color: var(--col-text-muted); /* Jasny szary */
+    color: var(--col-text-muted);
     font-family: var(--font-body);
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
 }
 
-/* Link do profilu */
+/* Link to profile */
 .dog-link {
     display: inline-flex;
     align-items: center;
@@ -199,7 +199,7 @@
     transform: translateX(5px);
 }
 
-/* Komunikat gdy brak psów */
+/* Message when no dogs */
 .no-dogs-message {
     grid-column: 1 / -1;
     text-align: center;
@@ -224,7 +224,7 @@
     font-size: 1.1rem;
 }
 
-/* Animacja wjazdu */
+/* Fade in animation */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -237,10 +237,10 @@
 }
 
 /* =========================================
-   DOG PROFILE - Profil psa (profesjonalny)
+   DOG PROFILE - Professional dog profile
    ========================================= */
 
-/* Kontener profilu */
+/* Profile container */
 .dog-profile-container {
     max-width: 1000px;
     margin: 0 auto;
@@ -287,7 +287,7 @@
     color: var(--col-accent);
 }
 
-/* Badge statusu - prawy górny róg */
+/* Status badge - top right corner */
 .dog-status-badge {
     position: absolute;
     top: 20px;
@@ -329,7 +329,7 @@
     color: #000;
 }
 
-/* Badge płci - lewy górny róg */
+/* Gender badge - top left corner */
 .dog-gender-badge-hero {
     position: absolute;
     top: 20px;
@@ -358,12 +358,12 @@
     color: #fff;
 }
 
-/* Treść profilu */
+/* Profile content */
 .dog-profile-content {
     padding: 3rem;
 }
 
-/* Header z imieniem */
+/* Header with name */
 .profile-header-dog {
     margin-bottom: 2.5rem;
     padding-bottom: 1.5rem;
@@ -379,7 +379,7 @@
     letter-spacing: 1px;
 }
 
-/* Sekcje */
+/* Sections */
 .dog-info-section,
 .dog-description-section,
 .dog-vaccinations-section,
@@ -398,7 +398,7 @@
 }
 
 /* =========================================
-   INFO GRID - NOWY STYL (Kafelki 2x2)
+   INFO GRID - New style (2x2 cards)
    ========================================= */
 
 .info-grid {
@@ -447,7 +447,7 @@
     font-weight: 600;
 }
 
-/* Info table full - dla długich wartości */
+/* Info table full - for long values */
 .info-table-full {
     background: rgba(0, 0, 0, 0.2);
     border: 2px solid rgba(197, 160, 101, 0.2);
@@ -473,10 +473,9 @@
 }
 
 /* =========================================
-   STARA TABELA (pozostawiona dla kompatybilności)
+   OLD TABLE (kept for compatibility)
    ========================================= */
 
-/* Elegancka tabela informacji */
 .info-table {
     background: rgba(0, 0, 0, 0.2);
     border: 2px solid rgba(197, 160, 101, 0.2);
@@ -517,7 +516,7 @@
     font-weight: 600;
 }
 
-/* Link w tabeli */
+/* Link in table */
 .info-link {
     color: var(--col-accent-light);
     text-decoration: underline;
@@ -528,7 +527,7 @@
     color: var(--col-accent);
 }
 
-/* Status inline z kropką */
+/* Status inline with dot */
 .status-inline {
     display: flex;
     align-items: center;
@@ -562,7 +561,7 @@
     box-shadow: 0 0 10px rgba(197, 160, 101, 0.5);
 }
 
-/* Sekcje tekstowe */
+/* Text sections */
 .description-content-dog,
 .vaccinations-content,
 .achievements-content {
@@ -588,7 +587,7 @@
     margin-bottom: 0;
 }
 
-/* Galeria zdjęć */
+/* Photo gallery */
 .gallery-grid-dog {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -596,7 +595,7 @@
 }
 
 /* =========================================
-   PEDIGREE TREE - Drzewo genealogiczne
+   PEDIGREE TREE - Genealogical tree
    ========================================= */
 
 .pedigree-section {
@@ -608,11 +607,10 @@
     border: 2px solid rgba(197, 160, 101, 0.2);
     border-radius: 12px;
     padding: 2rem;
-    /* USUNIĘTE: overflow-x: auto; - powodowało obcinanie popupów */
-    position: relative; /* Dodane dla popupów */
+    position: relative; /* For popups */
 }
 
-/* Poziomy drzewa */
+/* Tree levels */
 .pedigree-level {
     display: flex;
     justify-content: center;
@@ -625,7 +623,7 @@
     margin-bottom: 0;
 }
 
-/* Linie łączące poziomy */
+/* Connecting lines between levels */
 .pedigree-level::before {
     content: "";
     position: absolute;
@@ -641,7 +639,7 @@
     display: none;
 }
 
-/* Węzeł drzewa (pies) */
+/* Tree node (dog) */
 .pedigree-dog {
     background: rgba(0, 0, 0, 0.2);
     border: 2px solid rgba(197, 160, 101, 0.3);
@@ -651,20 +649,59 @@
     text-align: center;
     transition: all 0.3s ease;
     position: relative;
-    cursor: pointer;
+    cursor: default; /* Not clickable by default */
 }
 
-.pedigree-dog:hover {
+/* Clickable cards (parents/grandparents) */
+.pedigree-clickable {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block; /* Important for <a> tags */
+}
+
+.pedigree-clickable:hover {
     border-color: var(--col-accent);
     background: rgba(0, 0, 0, 0.3);
     transform: translateY(-3px);
+    position: relative;
+    z-index: 500;
 }
 
-/* Bieżący pies */
+/* Unknown dog - not clickable */
+.pedigree-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #28231e;
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--col-accent);
+    border-radius: 12px;
+    padding: 1rem;
+    width: 280px;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.9),
+        0 10px 30px rgba(0,0,0,0.7);
+
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.pedigree-unknown:hover {
+    transform: none;
+    border-color: rgba(197, 160, 101, 0.2);
+}
+
+/* Current dog (main) */
 .pedigree-current {
     background: rgba(197, 160, 101, 0.15);
     border: 2px solid var(--col-accent);
     min-width: 220px;
+    cursor: default;
 }
 
 .pedigree-current .pedigree-name {
@@ -672,7 +709,7 @@
     color: var(--col-accent);
 }
 
-/* Rodzice */
+/* Parents */
 .pedigree-parent {
     min-width: 200px;
 }
@@ -693,26 +730,13 @@
     border-color: #4A90E2;
 }
 
-/* Dziadkowie */
+/* Grandparents */
 .pedigree-grandparent {
     min-width: 160px;
     font-size: 0.9rem;
 }
 
-/* Nieznany pies */
-.pedigree-unknown {
-    background: rgba(0, 0, 0, 0.1);
-    border-style: dashed;
-    border-color: rgba(197, 160, 101, 0.2);
-    opacity: 0.5;
-    cursor: default;
-}
-
-.pedigree-unknown:hover {
-    transform: none;
-}
-
-/* Teksty w węzłach */
+/* Text in nodes */
 .pedigree-name {
     font-family: var(--font-heading);
     font-size: 1.05rem;
@@ -730,32 +754,41 @@
     letter-spacing: 1px;
 }
 
-/* Popup przy hover - POPRAWIONY */
+/* Popup on hover - FIXED: SOLID BACKGROUND */
 .pedigree-popup {
     position: absolute;
-    top: calc(100% + 10px); /* Zmienione z translate */
+    top: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(40, 35, 30, 0.98); /* Bardziej solid */
+    /* SOLID BACKGROUND - NO TRANSPARENCY */
+    background: rgb(40, 35, 30); /* Fully solid! */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 2px solid var(--col-accent);
     border-radius: 12px;
     padding: 1rem;
     width: 280px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    /* STRONG SHADOW for depth */
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.8),
+        0 10px 30px rgba(0,0,0,0.6);
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
-    z-index: 1000; /* Zwiększone z 100 */
-    pointer-events: none; /* Żeby nie przeszkadzał */
+    z-index: 10000; /* Very high */
+    pointer-events: none; /* Doesn't interfere with hover */
 }
 
-.pedigree-dog:hover .pedigree-popup {
+.pedigree-clickable:hover .pedigree-popup {
     opacity: 1;
     visibility: visible;
-    top: calc(100% + 15px); /* Lekkie przesunięcie na hover */
-    pointer-events: auto;
+    top: calc(100% + 15px);
+    pointer-events: auto; /* Enable pointer when visible */
+}
+
+/* Elements in popup - no own links */
+.pedigree-popup .popup-link {
+    display: none;
 }
 
 .pedigree-popup img {
@@ -797,7 +830,7 @@
     color: var(--col-accent-light);
 }
 
-/* Responsywność drzewa */
+/* Tree responsiveness */
 @media (max-width: 992px) {
     .pedigree-tree {
         padding: 1.5rem;
@@ -830,7 +863,7 @@
 }
 
 @media (max-width: 768px) {
-    /* UKRYJ DZIADKÓW NA MOBILE */
+    /* HIDE GRANDPARENTS ON MOBILE */
     .pedigree-grandparents-only {
         display: none !important;
     }
@@ -860,16 +893,16 @@
         top: calc(100% + 10px);
     }
 
-    /* WIĘKSZY FONT W HEADER NA MOBILE */
+    /* BIGGER FONT IN HEADER ON MOBILE */
     header.masthead .site-heading h1 {
-        font-size: 3.2rem !important; /* Zwiększone z 2.8rem */
+        font-size: 3.2rem !important;
     }
 
     header.masthead .site-heading .subheading {
-        font-size: 1.4rem !important; /* Zwiększone z 1.2rem */
+        font-size: 1.4rem !important;
     }
 
-    /* INFO GRID - 2x2 na mobile */
+    /* INFO GRID - 2x2 on mobile */
     .info-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
@@ -888,8 +921,7 @@
     }
 }
 
-/* Galeria zdjęć (kontynuacja) */
-
+/* Photo gallery (continued) */
 .gallery-item-dog {
     border-radius: 12px;
     overflow: hidden;
@@ -911,7 +943,7 @@
     display: block;
 }
 
-/* Przyciski akcji */
+/* Action buttons */
 .profile-actions-dog {
     padding-top: 2.5rem;
     border-top: 2px solid rgba(197, 160, 101, 0.3);
@@ -948,7 +980,7 @@
 }
 
 /* =========================================
-   RESPONSYWNOŚĆ - DOG PROFILE
+   RESPONSIVENESS - DOG PROFILE
    ========================================= */
 
 /* Tablet */
@@ -1023,7 +1055,7 @@
     }
 }
 
-/* Bardzo małe ekrany */
+/* Very small screens */
 @media (max-width: 480px) {
     .dog-profile-hero {
         height: 250px;
@@ -1052,16 +1084,16 @@
         height: 200px;
     }
 
-    /* JESZCZE WIĘKSZY HEADER NA MAŁYM MOBILE */
+    /* EVEN BIGGER HEADER ON SMALL MOBILE */
     header.masthead .site-heading h1 {
-        font-size: 2.6rem !important; /* Zwiększone z 2.2rem */
+        font-size: 2.6rem !important;
     }
 
     header.masthead .site-heading .subheading {
-        font-size: 1.2rem !important; /* Zwiększone z 1rem */
+        font-size: 1.2rem !important;
     }
 
-    /* INFO GRID - mniejszy padding */
+    /* INFO GRID - smaller padding */
     .info-grid {
         gap: 10px;
     }
@@ -1084,7 +1116,7 @@
 }
 
 /* =========================================
-   RESPONSYWNOŚĆ
+   RESPONSIVENESS - DOG LIST
    ========================================= */
 
 /* Tablet */
@@ -1127,7 +1159,7 @@
     }
 }
 
-/* Bardzo małe ekrany */
+/* Very small screens */
 @media (max-width: 480px) {
     .dog-image {
         height: 200px;

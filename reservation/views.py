@@ -1,38 +1,30 @@
-# reservation/views.py - WERSJA 2: Function-based view
+# reservation/views.py
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 
 from .forms import ContactForm
-from pets.models import Dog
 
 
 def reservation_form_view(request):
     """
-    Formularz kontaktowy/rezerwacyjny z wysyłką emaila
-    WERSJA 2: Function-based (prostsza, bardziej explicitna)
+    Contact/reservation form with email sending
     """
 
     if request.method == 'POST':
-        # Przetwarzanie wysłanego formularza
+        # Process submitted form
         form = ContactForm(request.POST)
 
         if form.is_valid():
-            # Pobierz dane z formularza
+            # Get form data
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             phone = form.cleaned_data['phone']
-            dog = form.cleaned_data.get('dog')  # Może być None
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
 
-            # Przygotuj nazwę psa jeśli wybrano
-            dog_info = ''
-            if dog:
-                dog_info = f"\nZainteresowanie psem: {dog.name} (ID: {dog.id})"
-
-            # Przygotuj treść emaila
+            # Prepare subject display name
             subject_choices = {
                 'reservation': 'Rezerwacja szczeniaka',
                 'info': 'Pytanie o hodowlę',
@@ -41,6 +33,7 @@ def reservation_form_view(request):
             }
             subject_display = subject_choices.get(subject, subject)
 
+            # Prepare email body
             email_body = f"""
 Nowa wiadomość z formularza kontaktowego Costa Rizada:
 
@@ -54,7 +47,7 @@ Telefon: {phone}
 ========================================
 TEMAT WIADOMOŚCI:
 ========================================
-{subject_display}{dog_info}
+{subject_display}
 
 ========================================
 TREŚĆ WIADOMOŚCI:
@@ -67,7 +60,7 @@ User Agent: {request.META.get('HTTP_USER_AGENT', 'Nieznane')}
 IP: {get_client_ip(request)}
 """
 
-            # Wyślij email
+            # Send email
             try:
                 send_mail(
                     subject=f'[Costa Rizada] {subject_display}',
@@ -77,39 +70,39 @@ IP: {get_client_ip(request)}
                     fail_silently=False,
                 )
 
-                # Opcjonalnie: Wyślij potwierdzenie do użytkownika
+                # Optional: Send confirmation to user
                 send_confirmation_email(email, name)
 
-                # Pokaż sukces
+                # Show success message
                 messages.success(
                     request,
                     'Dziękujemy za wiadomość! Odpowiemy w ciągu 24-48 godzin.'
                 )
 
-                # Przekieruj na tę samą stronę (POST-REDIRECT-GET pattern)
-                return redirect('rezerwacja:reservation-form')  # ← ZMIENIONE!
+                # Redirect (POST-REDIRECT-GET pattern)
+                return redirect('rezerwacja:reservation-form')
 
             except Exception as e:
-                # Błąd wysyłki
+                # Email sending error
                 messages.error(
                     request,
                     'Wystąpił błąd przy wysyłaniu wiadomości. '
                     'Prosimy o kontakt telefoniczny: +48 123 456 789'
                 )
-                print(f"Email error: {e}")  # Log do konsoli/logów
+                print(f"Email error: {e}")  # Log to console
 
         else:
-            # Formularz ma błędy
+            # Form has errors
             messages.error(
                 request,
                 'Formularz zawiera błędy. Proszę je poprawić i spróbować ponownie.'
             )
 
     else:
-        # GET request - pokaż pusty formularz
+        # GET request - show empty form
         form = ContactForm()
 
-    # Renderuj szablon z formularzem
+    # Render template with form
     context = {
         'form': form,
     }
@@ -118,7 +111,7 @@ IP: {get_client_ip(request)}
 
 
 def get_client_ip(request):
-    """Pomocnicza funkcja - pobierz IP użytkownika"""
+    """Helper function - get user's IP address"""
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
@@ -128,7 +121,7 @@ def get_client_ip(request):
 
 
 def send_confirmation_email(user_email, user_name):
-    """Opcjonalnie: Wyślij potwierdzenie do użytkownika"""
+    """Optional: Send confirmation to user"""
     try:
         send_mail(
             subject='Potwierdzenie - Twoja wiadomość do Costa Rizada',

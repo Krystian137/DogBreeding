@@ -78,6 +78,10 @@ class Dog(models.Model):
         max_length=20, choices=Status.choices, default=Status.AVAILABLE, verbose_name="Status"
     )
     slug = models.SlugField(max_length=200, unique=True, verbose_name="Adres URL (Slug)")
+    show_in_list = models.BooleanField(
+        default=True,
+        verbose_name="Pokazuj na liście psów"
+    )
 
     class Meta:
         verbose_name = "Pies"

@@ -15,7 +15,7 @@
 {% block content %}
 <div class="contact-container">
 
-    <!-- SEO Content - O hodowli -->
+    <!-- SEO Content - About kennel -->
     <section class="about-section">
         <h2 class="section-title-contact">O hodowli Costa Rizada</h2>
         <div class="about-content">
@@ -46,7 +46,7 @@
         </div>
     </section>
 
-    <!-- Formularz rezerwacji -->
+    <!-- Reservation form -->
     <section class="reservation-section">
         <h2 class="section-title-contact">Formularz rezerwacji</h2>
 
@@ -91,20 +91,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.dog.id_for_label }}">{{ form.dog.label }}</label>
-                    {{ form.dog }}
-                    {% if form.dog.errors %}
-                        <span class="error-message">{{ form.dog.errors.0 }}</span>
+                    <label for="{{ form.subject.id_for_label }}">{{ form.subject.label }} *</label>
+                    {{ form.subject }}
+                    {% if form.subject.errors %}
+                        <span class="error-message">{{ form.subject.errors.0 }}</span>
                     {% endif %}
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.subject.id_for_label }}">{{ form.subject.label }} *</label>
-                {{ form.subject }}
-                {% if form.subject.errors %}
-                    <span class="error-message">{{ form.subject.errors.0 }}</span>
-                {% endif %}
             </div>
 
             <div class="form-group">
@@ -139,7 +131,7 @@
         </form>
     </section>
 
-    <!-- Dane kontaktowe -->
+    <!-- Contact info -->
     <section class="contact-info-section">
         <h2 class="section-title-contact">Dane kontaktowe</h2>
 

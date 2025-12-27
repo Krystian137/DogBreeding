@@ -50,11 +50,10 @@
                 <h1 class="profile-name-dog">{{ dog.name }}</h1>
             </div>
 
-            <!-- Table with dog information - NOWA WERSJA -->
+            <!-- Table with dog information -->
             <div class="dog-info-section">
                 <h3 class="section-title-dog">Informacje podstawowe</h3>
 
-                <!-- Grid 2x2 dla krótkich info (mobile-friendly) -->
                 <div class="info-grid">
                     <div class="info-card">
                         <span class="info-icon">♂♀</span>
@@ -87,7 +86,6 @@
                     {% endif %}
                 </div>
 
-                <!-- Długie info - pełna szerokość -->
                 <div class="info-table-full">
                     {% if dog.color %}
                     <div class="info-row-full">
@@ -109,7 +107,7 @@
                 </div>
             </div>
 
-            <!-- Genealogical Tree - POPRAWIONE! -->
+            <!-- Genealogical Tree -->
             {% if dog.get_mother or dog.get_father %}
             <div class="pedigree-section">
                 <h3 class="section-title-dog">Rodowód</h3>
@@ -127,7 +125,7 @@
                     <div class="pedigree-level pedigree-level-1">
                         <!-- Mother -->
                         {% if dog.get_mother %}
-                        <div class="pedigree-dog pedigree-parent pedigree-mother" data-dog-id="{{ dog.get_mother.id }}">
+                        <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_mother.slug %}" class="pedigree-dog pedigree-parent pedigree-mother pedigree-clickable" data-dog-id="{{ dog.get_mother.id }}">
                             <div class="pedigree-name">{{ dog.get_mother.name }}</div>
                             <div class="pedigree-details">♀ Matka</div>
 
@@ -144,10 +142,9 @@
                                     {% if dog.get_mother.color %}
                                     <span>{{ dog.get_mother.color }}</span>
                                     {% endif %}
-                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_mother.slug %}" class="popup-link">Zobacz profil →</a>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                         {% else %}
                         <div class="pedigree-dog pedigree-unknown">
                             <div class="pedigree-name">—</div>
@@ -157,7 +154,7 @@
 
                         <!-- Father -->
                         {% if dog.get_father %}
-                        <div class="pedigree-dog pedigree-parent pedigree-father" data-dog-id="{{ dog.get_father.id }}">
+                        <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_father.slug %}" class="pedigree-dog pedigree-parent pedigree-father pedigree-clickable" data-dog-id="{{ dog.get_father.id }}">
                             <div class="pedigree-name">{{ dog.get_father.name }}</div>
                             <div class="pedigree-details">♂ Ojciec</div>
 
@@ -174,10 +171,9 @@
                                     {% if dog.get_father.color %}
                                     <span>{{ dog.get_father.color }}</span>
                                     {% endif %}
-                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_father.slug %}" class="popup-link">Zobacz profil →</a>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                         {% else %}
                         <div class="pedigree-dog pedigree-unknown">
                             <div class="pedigree-name">—</div>
@@ -186,16 +182,16 @@
                         {% endif %}
                     </div>
 
-                    <!-- 2: Grandparents - TYLKO DESKTOP - DODANE POPUPY! -->
+                    <!-- 2: Grandparents -->
                     {% if dog.get_maternal_grandmother or dog.get_maternal_grandfather or dog.get_paternal_grandmother or dog.get_paternal_grandfather %}
                     <div class="pedigree-level pedigree-level-2 pedigree-grandparents-only">
                         <!-- Maternal Grandmother -->
                         {% if dog.get_maternal_grandmother %}
-                        <div class="pedigree-dog pedigree-grandparent">
+                        <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_maternal_grandmother.slug %}" class="pedigree-dog pedigree-grandparent pedigree-clickable">
                             <div class="pedigree-name">{{ dog.get_maternal_grandmother.name }}</div>
                             <div class="pedigree-details">♀ Babcia</div>
 
-                            <!-- Hover popup - DODANE! -->
+                            <!-- Hover popup -->
                             <div class="pedigree-popup">
                                 {% if dog.get_maternal_grandmother.main_photo %}
                                 <img src="{{ dog.get_maternal_grandmother.main_photo.image.url }}" alt="{{ dog.get_maternal_grandmother.name }}">
@@ -208,21 +204,20 @@
                                     {% if dog.get_maternal_grandmother.color %}
                                     <span>{{ dog.get_maternal_grandmother.color }}</span>
                                     {% endif %}
-                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_maternal_grandmother.slug %}" class="popup-link">Zobacz profil →</a>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                         {% else %}
                         <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
                         {% endif %}
 
                         <!-- Maternal Grandfather -->
                         {% if dog.get_maternal_grandfather %}
-                        <div class="pedigree-dog pedigree-grandparent">
+                        <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_maternal_grandfather.slug %}" class="pedigree-dog pedigree-grandparent pedigree-clickable">
                             <div class="pedigree-name">{{ dog.get_maternal_grandfather.name }}</div>
                             <div class="pedigree-details">♂ Dziadek</div>
 
-                            <!-- Hover popup - DODANE! -->
+                            <!-- Hover popup -->
                             <div class="pedigree-popup">
                                 {% if dog.get_maternal_grandfather.main_photo %}
                                 <img src="{{ dog.get_maternal_grandfather.main_photo.image.url }}" alt="{{ dog.get_maternal_grandfather.name }}">
@@ -235,21 +230,20 @@
                                     {% if dog.get_maternal_grandfather.color %}
                                     <span>{{ dog.get_maternal_grandfather.color }}</span>
                                     {% endif %}
-                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_maternal_grandfather.slug %}" class="popup-link">Zobacz profil →</a>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                         {% else %}
                         <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
                         {% endif %}
 
                         <!-- Paternal Grandmother -->
                         {% if dog.get_paternal_grandmother %}
-                        <div class="pedigree-dog pedigree-grandparent">
+                        <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_paternal_grandmother.slug %}" class="pedigree-dog pedigree-grandparent pedigree-clickable">
                             <div class="pedigree-name">{{ dog.get_paternal_grandmother.name }}</div>
                             <div class="pedigree-details">♀ Babcia</div>
 
-                            <!-- Hover popup - DODANE! -->
+                            <!-- Hover popup -->
                             <div class="pedigree-popup">
                                 {% if dog.get_paternal_grandmother.main_photo %}
                                 <img src="{{ dog.get_paternal_grandmother.main_photo.image.url }}" alt="{{ dog.get_paternal_grandmother.name }}">
@@ -262,21 +256,20 @@
                                     {% if dog.get_paternal_grandmother.color %}
                                     <span>{{ dog.get_paternal_grandmother.color }}</span>
                                     {% endif %}
-                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_paternal_grandmother.slug %}" class="popup-link">Zobacz profil →</a>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                         {% else %}
                         <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
                         {% endif %}
 
                         <!-- Paternal Grandfather -->
                         {% if dog.get_paternal_grandfather %}
-                        <div class="pedigree-dog pedigree-grandparent">
+                        <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_paternal_grandfather.slug %}" class="pedigree-dog pedigree-grandparent pedigree-clickable">
                             <div class="pedigree-name">{{ dog.get_paternal_grandfather.name }}</div>
                             <div class="pedigree-details">♂ Dziadek</div>
 
-                            <!-- Hover popup - DODANE! -->
+                            <!-- Hover popup -->
                             <div class="pedigree-popup">
                                 {% if dog.get_paternal_grandfather.main_photo %}
                                 <img src="{{ dog.get_paternal_grandfather.main_photo.image.url }}" alt="{{ dog.get_paternal_grandfather.name }}">
@@ -289,10 +282,9 @@
                                     {% if dog.get_paternal_grandfather.color %}
                                     <span>{{ dog.get_paternal_grandfather.color }}</span>
                                     {% endif %}
-                                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.get_paternal_grandfather.slug %}" class="popup-link">Zobacz profil →</a>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                         {% else %}
                         <div class="pedigree-dog pedigree-unknown"><div class="pedigree-name">—</div></div>
                         {% endif %}

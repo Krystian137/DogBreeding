@@ -1,9 +1,8 @@
-# reservation/forms.py (lub tam gdzie masz views.py)
+# reservation/forms.py
 from django import forms
-from pets.models import Dog
 
 class ContactForm(forms.Form):
-    """Formularz kontaktowy/rezerwacyjny"""
+    """Contact and reservation form"""
 
     name = forms.CharField(
         max_length=200,
@@ -33,16 +32,6 @@ class ContactForm(forms.Form):
             'class': 'form-control'
         }),
         label='Telefon'
-    )
-
-    dog = forms.ModelChoiceField(
-        queryset=Dog.objects.none(),  # Ustawi się w __init__
-        required=False,
-        empty_label='-- Wybierz psa lub pozostaw puste --',
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        }),
-        label='Zainteresowanie szczeniakiem'
     )
 
     SUBJECT_CHOICES = [
@@ -80,17 +69,10 @@ class ContactForm(forms.Form):
         }
     )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Ustawienie dostępnych psów
-        self.fields['dog'].queryset = Dog.objects.filter(
-            status__in=['available', 'reserved']
-        ).order_by('name')
-
     def clean_phone(self):
-        """Walidacja numeru telefonu"""
+        """Phone number validation"""
         phone = self.cleaned_data.get('phone')
-        # Usuń spacje i myślniki
+        # Remove spaces and dashes
         phone_digits = ''.join(filter(str.isdigit, phone))
 
         if len(phone_digits) < 9:

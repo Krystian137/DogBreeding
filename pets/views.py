@@ -7,12 +7,25 @@ class DogList(ListView):
     model = Dog
     template_name = 'pets/dogs.html'
     context_object_name = 'dogs'
+    paginate_by = 12
+
+    def get_queryset(self):
+        return Dog.objects.filter(
+            show_in_list=True
+        ).select_related('litter').prefetch_related('photos').order_by('-birth_date')
 
 
 class DogProfile(DetailView):
     model = Dog
     template_name = 'pets/dog-profile.html'
     context_object_name = 'dog'
+
+    def get_queryset(self):
+        return Dog.objects.select_related(
+            'litter',
+            'mother',
+            'father'
+        ).prefetch_related('photos')
 
 
 class LitterList(ListView):

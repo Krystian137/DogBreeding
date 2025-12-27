@@ -17,7 +17,7 @@
 {% block content %}
 <div class="litter-detail-container">
     <div class="litter-detail-card">
-        <!-- Główne zdjęcie -->
+        <!-- Main Photo -->
         <div class="litter-detail-hero">
             {% if litter.photos.first %}
                 <img src="{{ litter.photos.first.image.url }}"
@@ -29,25 +29,25 @@
                 </div>
             {% endif %}
 
-            <!-- Badge z datą urodzenia -->
+            <!-- Badge - birthday -->
             <div class="litter-date-badge">
                 <span class="badge-date">{{ litter.birth_date|date:"d M Y" }}</span>
             </div>
         </div>
 
-        <!-- Treść -->
+        <!-- Content -->
         <div class="litter-detail-content">
-            <!-- Nagłówek -->
+            <!-- Header -->
             <div class="detail-header">
                 <h1 class="detail-name">{{ litter.name }}</h1>
 
-                <!-- Badge z liczbą szczeniąt -->
+                <!-- Badge - puppies total -->
                 <div class="detail-count-badge">
                     <span class="badge-total">{{ litter.total_puppies }} szczeniąt</span>
                 </div>
             </div>
 
-            <!-- Breakdown szczeniąt -->
+            <!-- Breakdown puppies -->
             <div class="puppies-breakdown">
                 <div class="breakdown-card breakdown-boys">
                     <div class="breakdown-icon">♂</div>
@@ -68,7 +68,7 @@
                 </div>
             </div>
 
-            <!-- Rodzice -->
+            <!-- Parents -->
             <div class="parents-section">
                 <h3 class="section-title">Rodzice</h3>
 
@@ -123,7 +123,7 @@
                 </div>
             </div>
 
-            <!-- Opis -->
+            <!-- Description -->
             {% if litter.description %}
             <div class="litter-description-section">
                 <h3 class="section-title">O miocie</h3>
@@ -133,7 +133,7 @@
             </div>
             {% endif %}
 
-            <!-- Szczenięta z tego miotu -->
+            <!-- Litter Puppies -->
             {% if litter.dogs.all %}
             <div class="puppies-section">
                 <h3 class="section-title">Szczenięta z tego miotu</h3>
@@ -154,7 +154,7 @@
                                 </div>
                             {% endif %}
 
-                            <!-- Badge płci -->
+                            <!-- Badge - gender -->
                             <div class="puppy-gender-badge">
                                 {% if dog.gender == 'M' %}
                                     <span class="badge-male-small">♂</span>
@@ -163,7 +163,7 @@
                                 {% endif %}
                             </div>
 
-                            <!-- Badge statusu -->
+                            <!-- Badge - status
                             <div class="puppy-status-badge">
                                 {% if dog.status == 'available' %}
                                     <span class="status-available">Dostępny</span>
@@ -175,8 +175,8 @@
                                     <span class="status-stayed">W hodowli</span>
                                 {% endif %}
                             </div>
+                            -->
                         </div>
-
                         <div class="puppy-info">
                             <h4 class="puppy-name">
                                 <a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}">
@@ -193,7 +193,7 @@
             </div>
             {% endif %}
 
-            <!-- Galeria zdjęć -->
+            <!-- Photos -->
             {% if litter.photos.all|length > 1 %}
             <div class="litter-gallery-section">
                 <h3 class="section-title">Galeria zdjęć</h3>
@@ -211,7 +211,7 @@
             </div>
             {% endif %}
 
-            <!-- Powrót -->
+            <!-- Back Button -->
             <div class="detail-actions">
                 <a href="{% url 'zwierzaki:LitterList' %}" class="btn-back-litter">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">

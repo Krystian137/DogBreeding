@@ -16,7 +16,7 @@
 <div class="litters-container">
     {% for litter in litters %}
         <article class="litter-card">
-            <!-- Zdjęcie miotu -->
+            <!-- Litter Photo -->
             <div class="litter-image">
                 {% if litter.photos.first %}
                     <img src="{{ litter.photos.first.image.url }}"
@@ -28,13 +28,13 @@
                     </div>
                 {% endif %}
 
-                <!-- Badge z liczbą szczeniąt -->
+                <!-- Badge - puppies -->
                 <div class="litter-badge">
                     <span class="badge-puppies">{{ litter.total_puppies }} szczeniąt</span>
                 </div>
             </div>
 
-            <!-- Informacje -->
+            <!-- Information -->
             <div class="litter-info">
                 <h3 class="litter-name">
                     <a href="{% url 'zwierzaki:LitterDetails' slug=litter.slug %}">
@@ -50,7 +50,7 @@
                     Urodzony: {{ litter.birth_date|date:"d.m.Y" }}
                 </p>
 
-                <!-- Rodzice -->
+                <!-- Parents -->
                 <div class="litter-parents">
                     {% if litter.mother %}
                     <div class="parent-info">
@@ -73,7 +73,7 @@
                     {% endif %}
                 </div>
 
-                <!-- Szczenięta breakdown -->
+                <!-- Puppies breakdown -->
                 <div class="puppies-count">
                     <div class="count-item count-boys">
                         <span class="count-icon">♂</span>
@@ -89,7 +89,7 @@
 
                 {% if litter.description %}
                 <p class="litter-description">
-                    {{ litter.description|truncatewords:20 }}
+                    {{ litter.description|truncatewords:15 }}
                 </p>
                 {% endif %}
 

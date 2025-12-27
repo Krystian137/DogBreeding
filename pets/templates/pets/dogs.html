@@ -79,4 +79,26 @@
         </div>
     {% endfor %}
 </div>
+
+<!-- Pages -->
+{% if is_paginated %}
+<nav aria-label="Paginacja postów">
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" title="Pierwsza strona" rel="first">« Pierwsza</a>
+            <a href="?page={{ page_obj.previous_page_number }}" title="Poprzednia strona" rel="prev">‹ Poprzednia</a>
+        {% endif %}
+
+        <span class="pagination-current">
+            Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" title="Następna strona" rel="next">Następna ›</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" title="Ostatnia strona" rel="last">Ostatnia »</a>
+        {% endif %}
+    </div>
+</nav>
+{% endif %}
+
 {% endblock %}
