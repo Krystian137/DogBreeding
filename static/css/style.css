@@ -18,7 +18,7 @@
     /* --- CZCIONKI --- */
     --font-display: "Cormorant Garamond", serif; /* Elegancki display */
     --font-heading: "Crimson Text", serif; /* Nagłówki */
-    --font-body: "Lora", serif; /* Tekst body */
+    --font-body: "Lato", serif; /* Tekst body */
 }
 
 /* =========================================
@@ -201,8 +201,10 @@ header.masthead .site-heading .subheading {
 main.container {
     position: relative;
     z-index: 1;
-    padding-top: 80px !important; /* Przestrzeń po headerze */
-    padding-bottom: 100px !important;
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 

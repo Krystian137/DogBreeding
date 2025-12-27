@@ -13,12 +13,23 @@
     transition: all 0.3s ease;
 }
 
-/* Linki i Brand (Zawsze jasne na ciemnym tle) */
+/* --- ZMIANA: Konfiguracja kontenera LOGO --- */
 #mainNav .navbar-brand {
     font-weight: 800;
     font-size: 1.5rem;
     color: var(--col-heading);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    /* Dodane dla obrazka: */
+    display: flex;          /* Żeby wyśrodkować obrazek w pionie */
+    align-items: center;    /* Centrowanie pionowe */
+    padding: 0;             /* Reset paddingu, żeby logo nie było ściśnięte */
+}
+
+/* --- NOWE: Styl dla samego obrazka LOGO --- */
+.header-logo {
+    height: 60px;       /* Wysokość startowa na dużym ekranie */
+    width: auto;        /* Zachowuje proporcje prostokąta */
+    transition: height 0.3s ease; /* Płynne zmniejszanie przy scrollowaniu */
 }
 
 #mainNav .navbar-nav > li.nav-item > a.nav-link {
@@ -90,6 +101,11 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
+    /* --- ZMIANA: Zmniejszanie loga po przewinięciu --- */
+    #mainNav.is-fixed .header-logo {
+        height: 45px; /* Mniejsze logo, gdy pasek jest przyklejony */
+    }
+
     /* Kolory w stanie przyklejonym */
     #mainNav.is-fixed .navbar-brand {
         color: var(--col-heading);
@@ -130,6 +146,11 @@
     #mainNav .navbar-brand {
         font-size: 1.3rem;
         text-shadow: none;
+    }
+
+    /* --- ZMIANA: Rozmiar loga na tablecie/telefonie --- */
+    .header-logo {
+        height: 40px; /* Optymalne dla mobile */
     }
 
     #mainNav .navbar-nav > li.nav-item > a.nav-link {
@@ -174,6 +195,11 @@
         font-size: 1.1rem;
     }
 
+    /* --- ZMIANA: Jeszcze mniejsze logo na małych ekranach --- */
+    .header-logo {
+        height: 35px;
+    }
+
     #mainNav .navbar-nav > li.nav-item > a.nav-link {
         font-size: 0.8rem;
         padding: 0.6rem 0.8rem;
@@ -186,7 +212,6 @@
 }
 
 /* --- 5. FALLBACK DLA STARSZYCH PRZEGLĄDAREK --- */
-/* Jeśli przeglądarka nie wspiera backdrop-filter, pokazujemy pełne tło */
 @supports not (backdrop-filter: blur(10px)) {
     #mainNav.is-fixed,
     #mainNav {
