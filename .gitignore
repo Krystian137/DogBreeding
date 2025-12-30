@@ -11,7 +11,7 @@ staticfiles/
 # --- Bezpieczeństwo (NAJWAŻNIEJSZE) ---
 .env
 .env.*
-! .env.example
+!.env.example
 
 # --- Python ---
 *.egg-info/
