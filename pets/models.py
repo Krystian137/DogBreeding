@@ -1,6 +1,12 @@
 from django.db import models
 from django.db.models import SET_NULL
 from datetime import date
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
+import os
+
 
 class Litter(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nazwa miotu (np. Litera A)")
@@ -19,6 +25,7 @@ class Litter(models.Model):
     boys_count = models.PositiveIntegerField(verbose_name="Liczba samców", default=0)
     girls_count = models.PositiveIntegerField(verbose_name="Liczba samic", default=0)
     slug = models.SlugField(max_length=200, unique=True, verbose_name="Adres URL (Slug)")
+
     class Meta:
         verbose_name = "Miot"
         verbose_name_plural = "Mioty"
@@ -89,18 +96,14 @@ class Dog(models.Model):
 
     @property
     def get_mother(self):
-        if self.mother:
-            return self.mother
-        if self.litter and self.litter.mother:
-            return self.litter.mother
+        if self.mother: return self.mother
+        if self.litter and self.litter.mother: return self.litter.mother
         return None
 
     @property
     def get_father(self):
-        if self.father:
-            return self.father
-        if self.litter and self.litter.father:
-            return self.litter.father
+        if self.father: return self.father
+        if self.litter and self.litter.father: return self.litter.father
         return None
 
     @property
@@ -125,12 +128,9 @@ class Dog(models.Model):
 
     @property
     def age(self):
-        if not self.birth_date:
-            return None
+        if not self.birth_date: return None
         today = date.today()
-        years = today.year - self.birth_date.year - (
-                (today.month, today.day) < (self.birth_date.month, self.birth_date.day)
-        )
+        years = today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
         if years == 0:
             months = (today.year - self.birth_date.year) * 12 + today.month - self.birth_date.month
             return f"{months} msc"
@@ -154,17 +154,57 @@ class DogPhoto(models.Model):
     class Meta:
         verbose_name = "Zdjęcie"
         verbose_name_plural = "Zdjęcia"
+        ordering = ['order', 'upload_date']
 
     def save(self, *args, **kwargs):
         if self.is_main:
-            DogPhoto.objects.filter(
-                dog=self.dog,
-                is_main=True
-            ).exclude(pk=self.pk).update(is_main=False)
+            DogPhoto.objects.filter(dog=self.dog, is_main=True).exclude(pk=self.pk).update(is_main=False)
+
+        is_new_file = False
+        if self.pk:
+            try:
+                old_instance = DogPhoto.objects.get(pk=self.pk)
+                if self.image and old_instance.image != self.image:
+                    is_new_file = True
+            except DogPhoto.DoesNotExist:
+                is_new_file = True
+        else:
+            is_new_file = True
+
+        if self.image and is_new_file:
+            self.image = self._optimize_image(self.image)
+
         super().save(*args, **kwargs)
 
-    class Meta:
-        ordering = ['order', 'upload_date']
+    def _optimize_image(self, image_field):
+        try:
+            img = Image.open(image_field)
+            if img.mode in ('RGBA', 'LA', 'P'):
+                background = Image.new('RGB', img.size, (255, 255, 255))
+                if img.mode == 'RGBA':
+                    background.paste(img, mask=img.split()[-1])
+                else:
+                    background.paste(img)
+                img = background
+
+            max_size = (1920, 1920)
+            if img.width > max_size[0] or img.height > max_size[1]:
+                img.thumbnail(max_size, Image.Resampling.LANCZOS)
+
+            output = BytesIO()
+            img.save(output, format='JPEG', quality=85, optimize=True)
+            output.seek(0)
+
+            filename = os.path.basename(image_field.name)
+            name, ext = os.path.splitext(filename)
+            new_filename = f"{name}.jpg"
+
+            return InMemoryUploadedFile(
+                output, 'ImageField', new_filename, 'image/jpeg', sys.getsizeof(output), None
+            )
+        except Exception as e:
+            print(f"Image optimization failed: {e}")
+            return image_field
 
     def __str__(self):
         return f"Zdjęcie {self.id} ({self.upload_date.strftime('%Y-%m-%d')})"
@@ -181,6 +221,52 @@ class LitterPhoto(models.Model):
         verbose_name_plural = "Zdjęcia"
         ordering = ['order', 'upload_date']
 
+    def save(self, *args, **kwargs):
+        is_new_file = False
+        if self.pk:
+            try:
+                old_instance = LitterPhoto.objects.get(pk=self.pk)
+                if self.image and old_instance.image != self.image:
+                    is_new_file = True
+            except LitterPhoto.DoesNotExist:
+                is_new_file = True
+        else:
+            is_new_file = True
+
+        if self.image and is_new_file:
+            self.image = self._optimize_image(self.image)
+
+        super().save(*args, **kwargs)
+
+    def _optimize_image(self, image_field):
+        try:
+            img = Image.open(image_field)
+            if img.mode in ('RGBA', 'LA', 'P'):
+                background = Image.new('RGB', img.size, (255, 255, 255))
+                if img.mode == 'RGBA':
+                    background.paste(img, mask=img.split()[-1])
+                else:
+                    background.paste(img)
+                img = background
+
+            max_size = (1920, 1920)
+            if img.width > max_size[0] or img.height > max_size[1]:
+                img.thumbnail(max_size, Image.Resampling.LANCZOS)
+
+            output = BytesIO()
+            img.save(output, format='JPEG', quality=85, optimize=True)
+            output.seek(0)
+
+            filename = os.path.basename(image_field.name)
+            name, ext = os.path.splitext(filename)
+            new_filename = f"{name}.jpg"
+
+            return InMemoryUploadedFile(
+                output, 'ImageField', new_filename, 'image/jpeg', sys.getsizeof(output), None
+            )
+        except Exception as e:
+            print(f"Image optimization failed: {e}")
+            return image_field
+
     def __str__(self):
         return f"Zdjęcie {self.id} ({self.upload_date.strftime('%Y-%m-%d')})"
-
