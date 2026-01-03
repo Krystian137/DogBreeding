@@ -78,5 +78,48 @@
     </div>
 </nav>
 {% endif %}
-
+<script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "LocalBusiness",
+            "@id": "https://www.costarizada.pl/#organization",
+            "name": "Costa Rizada",
+            "alternateName": "Hodowla Costa Rizada",
+            "description": "Domowa hodowla hiszpańskiego psa dowodnego (Perro de Agua Español) we Wrocławiu.",
+            "url": "https://www.costarizada.pl",
+            "telephone": "+48 604 199 265",
+            "email": "hodowla.costa.rizada@gmail.com",
+            "image": "https://costarizada.pl/static/img/logo.jpeg",
+            "priceRange": "$$",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Wrocław",
+                "addressCountry": "PL"
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "51.1079",
+                "longitude": "17.0385"
+            },
+            "sameAs": [
+                "https://www.facebook.com/people/Hiszpa%C5%84ski-Pies-Dowodny-hodowla-Costa-Rizada-FCI/61584677283927/",
+                "https://www.instagram.com/neomi.hiszpanskipies"
+            ]
+        },
+        {
+            "@type": "WebSite",
+            "@id": "https://www.costarizada.pl/#website",
+            "url": "https://www.costarizada.pl",
+            "name": "Costa Rizada - Hiszpański Pies Dowodny",
+            "description": "Profesjonalna, domowa hodowla psów rasy hiszpański pies dowodny we Wrocławiu.",
+            "publisher": {
+                "@id": "https://www.costarizada.pl/#organization"
+            },
+            "inLanguage": "pl-PL"
+        }
+    ]
+    }
+</script>
 {% endblock %}

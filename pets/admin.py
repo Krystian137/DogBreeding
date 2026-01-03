@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Dog, Litter, DogPhoto, LitterPhoto
@@ -16,6 +17,7 @@ class DogPhotoInline(admin.TabularInline):
                 obj.image.url
             )
         return "—"
+
     image_preview.short_description = "Podgląd"
 
 
@@ -32,17 +34,41 @@ class LitterPhotoInline(admin.TabularInline):
                 obj.image.url
             )
         return "—"
+
     image_preview.short_description = "Podgląd"
 
 
 @admin.register(Dog)
 class DogAdmin(admin.ModelAdmin):
-    list_display = ('name', 'litter', 'gender', 'status', 'age', 'main_photo_preview')
+    # USUNIĘTO: 'status' z list_display
+    list_display = ('name', 'litter', 'gender', 'age', 'show_in_list', 'main_photo_preview')
+
     prepopulated_fields = {'slug': ('name',)}
-    list_filter = ('status', 'gender', 'litter')
+
+    # USUNIĘTO: 'status' z list_filter
+    list_filter = ('gender', 'litter', 'show_in_list')
+
     search_fields = ('name',)
     readonly_fields = ('age',)
     inlines = [DogPhotoInline]
+
+    # Grupowanie pól w adminie
+    fieldsets = (
+        ('Podstawowe informacje', {
+            'fields': ('name', 'gender', 'birth_date', 'color', 'slug', 'show_in_list')
+        }),
+        ('Rodowód', {
+            'fields': ('litter', 'mother', 'father')
+        }),
+        ('Parametry fizyczne (opcjonalnie)', {
+            'fields': ('weight', 'height'),
+            'classes': ('collapse',),  # Domyślnie zwinięte
+        }),
+        ('Dodatkowe informacje', {
+            'fields': ('description', 'tests', 'achievements'),
+            'classes': ('collapse',),
+        }),
+    )
 
     def main_photo_preview(self, obj):
         if obj.main_photo:
@@ -51,6 +77,7 @@ class DogAdmin(admin.ModelAdmin):
                 obj.main_photo.image.url
             )
         return "—"
+
     main_photo_preview.short_description = "Główne zdjęcie"
 
 
@@ -60,3 +87,20 @@ class LitterAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name', 'mother__name', 'father__name')
     inlines = [LitterPhotoInline]
+
+    fieldsets = (
+        ('Podstawowe informacje', {
+            'fields': ('name', 'birth_date', 'slug')
+        }),
+        ('Rodzice', {
+            'fields': ('mother', 'father'),
+            'description': 'Wybierz rodziców z hodowli (jeśli są w systemie)'
+        }),
+        ('Liczebność', {
+            'fields': ('boys_count', 'girls_count')
+        }),
+        ('Opis', {
+            'fields': ('description',),
+            'classes': ('collapse',),
+        }),
+    )

@@ -19,12 +19,12 @@
         <article class="dog-card">
             <!-- Dog Photo -->
             <div class="dog-image">
-                {% if dog.main_image %}
-                    <img src="{{ dog.main_image.url }}" 
+                {% if dog.main_photo %}
+                    <img src="{{ dog.main_photo.image.url }}"
                          alt="{{ dog.name }}"
                          loading="lazy">
                 {% elif dog.photos.exists %}
-                    <img src="{{ dog.photos.first.image.url }}" 
+                    <img src="{{ dog.photos.first.image.url }}"
                          alt="{{ dog.name }}"
                          loading="lazy">
                 {% else %}
@@ -45,11 +45,18 @@
 
             <!-- Info -->
             <div class="dog-info">
-                <h3 class="dog-name">
-                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}">
+                {# ZMIENIONO: Link tylko jeśli pies ma slug #}
+                {% if dog.has_detail_page %}
+                    <h3 class="dog-name">
+                        <a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}">
+                            {{ dog.name }}
+                        </a>
+                    </h3>
+                {% else %}
+                    <h3 class="dog-name">
                         {{ dog.name }}
-                    </a>
-                </h3>
+                    </h3>
+                {% endif %}
 
                 {% if dog.age %}
                 <p class="dog-age">
@@ -64,12 +71,19 @@
                     {{ dog.description|truncatewords:25 }}
                 </p>
 
-                <a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}" class="dog-link">
-                    Zobacz profil
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                    </svg>
-                </a>
+                {# ZMIENIONO: Przycisk tylko jeśli pies ma slug #}
+                {% if dog.has_detail_page %}
+                    <a href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}" class="dog-link">
+                        Zobacz profil
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                        </svg>
+                    </a>
+                {% else %}
+                    <span class="dog-link-disabled" style="opacity: 0.5; cursor: not-allowed;">
+                        (Pies spoza hodowli)
+                    </span>
+                {% endif %}
             </div>
         </article>
     {% empty %}

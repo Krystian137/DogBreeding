@@ -304,12 +304,12 @@
             </div>
             {% endif %}
 
-            <!-- Vaccinations -->
-            {% if dog.vaccinations %}
+            <!-- Tests -->
+            {% if dog.tests %}
             <div class="dog-vaccinations-section">
-                <h3 class="section-title-dog">Szczepienia</h3>
+                <h3 class="section-title-dog">Badania</h3>
                 <div class="vaccinations-content">
-                    {{ dog.vaccinations|linebreaks }}
+                    {{ dog.tests|linebreaks }}
                 </div>
             </div>
             {% endif %}

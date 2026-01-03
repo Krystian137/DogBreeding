@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'config.middleware.ServeMediaMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -158,7 +159,7 @@ else:
     # Local development
     STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 
@@ -171,16 +172,16 @@ else:
 
 
 # Email backend
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = env.int('EMAIL_PORT', default=587)
-EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+#EMAIL_HOST = env('EMAIL_HOST')
+#EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+#EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+#EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+#EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
-CONTACT_EMAIL = env('CONTACT_EMAIL', default=EMAIL_HOST_USER)
+#DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
+#CONTACT_EMAIL = env('CONTACT_EMAIL', default=EMAIL_HOST_USER)
 
 if not DEBUG:
     # HTTPS/SSL
@@ -200,3 +201,13 @@ if not DEBUG:
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True

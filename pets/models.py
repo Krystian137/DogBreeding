@@ -12,16 +12,21 @@ class Litter(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nazwa miotu (np. Litera A)")
     birth_date = models.DateField(verbose_name="Data urodzenia")
     description = models.TextField(verbose_name="Opis", blank=True)
+
+    # Matka - może być z hodowli lub spoza
     mother = models.ForeignKey(
         "Dog", on_delete=SET_NULL, null=True, blank=True,
         related_name='mother_litters', verbose_name="Matka",
         limit_choices_to={'gender': 'F'}
     )
+
+    # Ojciec - może być z hodowli lub spoza
     father = models.ForeignKey(
         "Dog", on_delete=SET_NULL, null=True, blank=True,
         related_name='father_litters', verbose_name="Ojciec",
         limit_choices_to={'gender': 'M'}
     )
+
     boys_count = models.PositiveIntegerField(verbose_name="Liczba samców", default=0)
     girls_count = models.PositiveIntegerField(verbose_name="Liczba samic", default=0)
     slug = models.SlugField(max_length=200, unique=True, verbose_name="Adres URL (Slug)")
@@ -39,12 +44,6 @@ class Litter(models.Model):
 
 
 class Dog(models.Model):
-    class Status(models.TextChoices):
-        AVAILABLE = 'available', 'Dostępny'
-        RESERVED = 'reserved', 'Zarezerwowany'
-        SOLD = 'sold', 'Sprzedany'
-        STAYED = 'stayed', 'Został w hodowli'
-
     class Gender(models.TextChoices):
         MALE = 'M', 'Samiec'
         FEMALE = 'F', 'Samica'
@@ -76,18 +75,38 @@ class Dog(models.Model):
     )
     birth_date = models.DateField(verbose_name="Data urodzenia")
     description = models.TextField(verbose_name="Opis", blank=True)
-    vaccinations = models.TextField(null=True, blank=True, verbose_name="Szczepienia")
+    tests = models.TextField(null=True, blank=True, verbose_name="Badania")
     achievements = models.TextField(null=True, blank=True, verbose_name="Osiągnięcia")
-    weight = models.FloatField(verbose_name="Waga (kg)", help_text="Wpisz wagę w kilogramach")
-    height = models.FloatField(verbose_name="Wzrost (cm)", help_text="Wpisz wzrost w cm")
-    color = models.CharField(max_length=50, verbose_name="Umaszczenie")
-    status = models.CharField(
-        max_length=20, choices=Status.choices, default=Status.AVAILABLE, verbose_name="Status"
+
+    # ZMIENIONO: Waga i wzrost OPCJONALNE (null=True, blank=True)
+    weight = models.FloatField(
+        null=True,
+        blank=True,
+        verbose_name="Waga (kg)",
+        help_text="Wpisz wagę w kilogramach (opcjonalnie)"
     )
-    slug = models.SlugField(max_length=200, unique=True, verbose_name="Adres URL (Slug)")
+    height = models.FloatField(
+        null=True,
+        blank=True,
+        verbose_name="Wzrost (cm)",
+        help_text="Wpisz wzrost w cm (opcjonalnie)"
+    )
+
+    color = models.CharField(max_length=50, verbose_name="Umaszczenie")
+
+    # ZMIENIONO: Slug OPCJONALNY (blank=True) - dla psów spoza hodowli można zostawić puste
+    slug = models.SlugField(
+        max_length=200,
+        unique=True,
+        blank=True,
+        verbose_name="Adres URL (Slug)",
+        help_text="Zostaw puste dla psów spoza hodowli (bez własnej strony)"
+    )
+
     show_in_list = models.BooleanField(
         default=True,
-        verbose_name="Pokazuj na liście psów"
+        verbose_name="Pokazuj na liście psów",
+        help_text="Odznacz dla psów spoza hodowli (pojawią się tylko w rodowodach)"
     )
 
     class Meta:
@@ -96,14 +115,18 @@ class Dog(models.Model):
 
     @property
     def get_mother(self):
-        if self.mother: return self.mother
-        if self.litter and self.litter.mother: return self.litter.mother
+        if self.mother:
+            return self.mother
+        if self.litter and self.litter.mother:
+            return self.litter.mother
         return None
 
     @property
     def get_father(self):
-        if self.father: return self.father
-        if self.litter and self.litter.father: return self.litter.father
+        if self.father:
+            return self.father
+        if self.litter and self.litter.father:
+            return self.litter.father
         return None
 
     @property
@@ -128,9 +151,11 @@ class Dog(models.Model):
 
     @property
     def age(self):
-        if not self.birth_date: return None
+        if not self.birth_date:
+            return None
         today = date.today()
-        years = today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
+        years = today.year - self.birth_date.year - (
+                    (today.month, today.day) < (self.birth_date.month, self.birth_date.day))
         if years == 0:
             months = (today.year - self.birth_date.year) * 12 + today.month - self.birth_date.month
             return f"{months} msc"
@@ -140,8 +165,21 @@ class Dog(models.Model):
     def main_photo(self):
         return self.photos.filter(is_main=True).first()
 
+    @property
+    def has_detail_page(self):
+        """Czy pies ma swoją stronę (ma slug i jest show_in_list)"""
+        return bool(self.slug)
+
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        # Jeśli slug jest pusty, wygeneruj automatycznie z nazwy
+        # (opcjonalnie - możesz to wyłączyć jeśli chcesz ręcznie kontrolować)
+        # if not self.slug and self.show_in_list:
+        #     from django.utils.text import slugify
+        #     self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class DogPhoto(models.Model):
