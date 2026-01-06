@@ -5,4 +5,5 @@ app_name = 'rezerwacja'
 
 urlpatterns = [
     path('', views.reservation_form_view, name='reservation-form'),
+    path('FAQ/', views.FAQ.as_view(), name='FAQ'),
 ]

@@ -1,50 +1,42 @@
 <!doctype html>
 {% load static %}
+{% load pet_tags %}
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Costa Rizada – hodowla Hiszpańskich Psów Dowodnych{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description"
-          content="{% block meta_description %}Hodowla psów rasowych.{% endblock %}">
+    <meta name="description" content="{% block meta_description %}Hodowla psów rasowych.{% endblock %}">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#C5A065">
-
     <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-
     <meta property="og:title" content="{% block og_title %}Costa Rizada{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Hodowla Hiszpańskich Psów Dowodnych.{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
     <meta property="og:locale" content="pl_PL">
     <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}/static/img/logo-transparent.png{% endblock %}">
-
     <link rel="shortcut icon" type="image/png" href="{% static 'img/logo-transparent.png' %}"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="preload" href="{% static 'css/style.css' %}" as="style">
     <link rel="preload" href="{% static 'css/cards.css' %}" as="style">
-
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/cards.css' %}">
     <link rel="stylesheet" href="{% static 'css/footer.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
-
     {% block extra_head %}{% endblock %}
 </head>
-
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
     <div class="container px-4 px-lg-5">
         <a class="navbar-brand" href="/">
             <img src="{% static 'img/logo-transparent.png' %}" alt="Costa Rizada" class="header-logo">
-        </a> <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarResponsive">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -52,14 +44,37 @@
                 <li class="nav-item">
                     <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'blog:main' %}">Blog</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'zwierzaki:DogList' %}">Psy</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-lg-3 py-3 py-lg-4 dropdown-link-clickable" href="{% url 'zwierzaki:DogList' %}" id="dogsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Psy</a>
+                    <ul class="dropdown-menu" aria-labelledby="dogsDropdown">
+                        {% get_dogs_for_menu as dogs %}
+                        {% if dogs %}
+                            {% for dog in dogs %}
+                                <li><a class="dropdown-item" href="{% url 'zwierzaki:DogProfile' slug=dog.slug %}">{{ dog.name }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li><span class="dropdown-empty">Brak psów</span></li>
+                        {% endif %}
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'zwierzaki:LitterList' %}">Mioty</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-lg-3 py-3 py-lg-4 dropdown-link-clickable" href="{% url 'zwierzaki:LitterList' %}" id="littersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mioty</a>
+                    <ul class="dropdown-menu" aria-labelledby="littersDropdown">
+                        {% get_litters_for_menu as litters %}
+                        {% if litters %}
+                            {% for litter in litters %}
+                                <li><a class="dropdown-item" href="{% url 'zwierzaki:LitterDetails' slug=litter.slug %}">{{ litter.name }} <small>({{ litter.birth_date.year }})</small></a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li><span class="dropdown-empty">Brak miotów</span></li>
+                        {% endif %}
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'rezerwacja:reservation-form' %}">Kontakt</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'rezerwacja:FAQ' %}">FAQ</a>
                 </li>
             </ul>
         </div>
@@ -72,14 +87,9 @@
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="site-heading">
                     {% block header_content %}
-                        <!-- Option 1 Logo -->
-                        <!-- <img src="{% static 'img/logo.png' %}" alt="Costa Rizada" class="header-logo"> -->
-
-                        <!-- Option 2 TEXT -->
                         <h1>Costa Rizada</h1>
                         <span class="subheading">Hodowla Psów Rasowych</span>
-                        
-                        {% endblock %}
+                    {% endblock %}
                 </div>
             </div>
         </div>
@@ -103,13 +113,9 @@
             <div class="col-md-4 text-center">
                 <div class="h-100 p-4 rounded-3">
                     <h4 class="footer-heading">Costa Rizada</h4>
-                    <p class="mb-0">
-                        Hodowla Costa Rizada to domowa hodowla psów rasy hiszpański pies dowodny, powstała z pasji do tej
-                        inteligentnej, wszechstronnej i niezwykle oddanej rasy.
-                    </p>
+                    <p class="mb-0">Hodowla Costa Rizada to domowa hodowla psów rasy hiszpański pies dowodny, powstała z pasji do tej inteligentnej, wszechstronnej i niezwykle oddanej rasy.</p>
                 </div>
             </div>
-
             <div class="col-md-4 text-center">
                 <div class="h-100 p-4 rounded-3">
                     <h4 class="footer-heading">Na skróty</h4>
@@ -118,27 +124,23 @@
                         <a href="{% url 'zwierzaki:LitterList' %}">Mioty</a><br>
                         <a href="{% url 'blog:main' %}">Blog</a><br>
                         <a href="{% url 'rezerwacja:reservation-form' %}">Kontakt</a>
+                        <a href="{% url 'rezerwacja:FAQ' %}">FAQ</a>
                     </p>
                 </div>
             </div>
         </div>
-
         <hr class="footer-divider my-4">
-
         <div class="row text-center">
             <div class="col-12">
-                <p class="copyright mb-0">
-                    © {% now "Y" %} Costa Rizada. Wszelkie prawa zastrzeżone.
-                </p>
+                <p class="copyright mb-0">© {% now "Y" %} Costa Rizada. Wszelkie prawa zastrzeżone.</p>
             </div>
         </div>
-
     </div>
 </footer>
 
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/scripts.js' %}"></script>
+
 {% block extra_js %}{% endblock %}
 </body>
 </html>

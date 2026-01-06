@@ -88,7 +88,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 if env('ON_MYDEVIL', default=False):
-    # Production - MySQL (MyDevil)
+    # Production - MySQL with UTF8MB4 (emoji support)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -98,19 +98,28 @@ if env('ON_MYDEVIL', default=False):
             'HOST': env('DB_HOST', default='localhost'),
             'PORT': env('DB_PORT', default='3306'),
             'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
                 'charset': 'utf8mb4',
+                'init_command': (
+                    "SET sql_mode='STRICT_TRANS_TABLES',"
+                    "innodb_strict_mode=1,"
+                    "character_set_connection=utf8mb4,"
+                    "collation_connection=utf8mb4_unicode_ci"
+                ),
             },
+            'TEST': {
+                'CHARSET': 'utf8mb4',
+                'COLLATION': 'utf8mb4_unicode_ci',
+            }
         }
     }
 else:
+    # Local - SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

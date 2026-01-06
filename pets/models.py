@@ -188,6 +188,7 @@ class DogPhoto(models.Model):
     is_main = models.BooleanField(default=False)
     order = models.PositiveIntegerField(default=0)
     upload_date = models.DateTimeField(auto_now_add=True)
+    tests = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Zdjęcie"

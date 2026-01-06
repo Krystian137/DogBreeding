@@ -3,9 +3,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
-
+from django.views.generic import TemplateView
 from .forms import ContactForm
 
+class FAQ(TemplateView):
+    template_name = 'reservation/FAQ.html'
 
 def reservation_form_view(request):
     """
