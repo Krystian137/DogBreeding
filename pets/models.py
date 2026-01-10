@@ -13,14 +13,12 @@ class Litter(models.Model):
     birth_date = models.DateField(verbose_name="Data urodzenia")
     description = models.TextField(verbose_name="Opis", blank=True)
 
-    # Matka - może być z hodowli lub spoza
     mother = models.ForeignKey(
         "Dog", on_delete=SET_NULL, null=True, blank=True,
         related_name='mother_litters', verbose_name="Matka",
         limit_choices_to={'gender': 'F'}
     )
 
-    # Ojciec - może być z hodowli lub spoza
     father = models.ForeignKey(
         "Dog", on_delete=SET_NULL, null=True, blank=True,
         related_name='father_litters', verbose_name="Ojciec",
@@ -78,7 +76,6 @@ class Dog(models.Model):
     tests = models.TextField(null=True, blank=True, verbose_name="Badania")
     achievements = models.TextField(null=True, blank=True, verbose_name="Osiągnięcia")
 
-    # ZMIENIONO: Waga i wzrost OPCJONALNE (null=True, blank=True)
     weight = models.FloatField(
         null=True,
         blank=True,
@@ -94,7 +91,6 @@ class Dog(models.Model):
 
     color = models.CharField(max_length=50, verbose_name="Umaszczenie")
 
-    # ZMIENIONO: Slug OPCJONALNY (blank=True) - dla psów spoza hodowli można zostawić puste
     slug = models.SlugField(
         max_length=200,
         unique=True,
@@ -174,11 +170,6 @@ class Dog(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        # Jeśli slug jest pusty, wygeneruj automatycznie z nazwy
-        # (opcjonalnie - możesz to wyłączyć jeśli chcesz ręcznie kontrolować)
-        # if not self.slug and self.show_in_list:
-        #     from django.utils.text import slugify
-        #     self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
 
