@@ -40,19 +40,16 @@ class LitterPhotoInline(admin.TabularInline):
 
 @admin.register(Dog)
 class DogAdmin(admin.ModelAdmin):
-    # USUNIĘTO: 'status' z list_display
     list_display = ('name', 'litter', 'gender', 'age', 'show_in_list', 'main_photo_preview')
 
     prepopulated_fields = {'slug': ('name',)}
 
-    # USUNIĘTO: 'status' z list_filter
     list_filter = ('gender', 'litter', 'show_in_list')
 
     search_fields = ('name',)
     readonly_fields = ('age',)
     inlines = [DogPhotoInline]
 
-    # Grupowanie pól w adminie
     fieldsets = (
         ('Podstawowe informacje', {
             'fields': ('name', 'gender', 'birth_date', 'color', 'slug', 'show_in_list')
@@ -62,7 +59,7 @@ class DogAdmin(admin.ModelAdmin):
         }),
         ('Parametry fizyczne (opcjonalnie)', {
             'fields': ('weight', 'height'),
-            'classes': ('collapse',),  # Domyślnie zwinięte
+            'classes': ('collapse',),
         }),
         ('Dodatkowe informacje', {
             'fields': ('description', 'tests', 'achievements'),
